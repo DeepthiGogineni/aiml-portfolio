@@ -2051,3 +2051,6 @@ section {
     padding: 1.5rem 0;
   }
 }
+
+/* keep decorative background shapes from causing sideways scrolling */
+html, body { overflow-x: clip; }
