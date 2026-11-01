@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neural Network Components | Deepthi Pinninti Portfolio</title>
+  <meta name="description" content="A 14-slide visual presentation that defines layers, neurons, weights, activation functions, loss functions and optimization algorithms, with results from my own TensorFlow Playground experiments.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    /* ===== Enhanced Hero ===== */
+    .artifact-page-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 10rem 0 5rem;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #0f172a 100%);
+      color: #f1f5f9;
+    }
+
+    .artifact-page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 20% 50%, rgba(37, 99, 235, 0.15) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 350px at 80% 30%, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .artifact-page-hero .container {
+      position: relative;
+      z-index: 2;
+    }
+
+    .artifact-page-hero h1 {
+      color: #f1f5f9;
+      font-size: 3.25rem;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .artifact-page-hero .breadcrumb a {
+      color: #94a3b8;
+    }
+
+    .artifact-page-hero .breadcrumb a:hover {
+      color: #e2e8f0;
+    }
+
+    .artifact-page-hero .breadcrumb span {
+      color: #64748b;
+    }
+
+    .artifact-page-hero .breadcrumb .breadcrumb-current {
+      color: #93c5fd;
+    }
+
+    .artifact-page-hero .hero-tag {
+      background: rgba(124, 58, 237, 0.2);
+      border: 1px solid rgba(124, 58, 237, 0.35);
+      color: #c4b5fd;
+    }
+
+    .artifact-page-hero .artifact-hero-desc {
+      color: #94a3b8;
+      font-size: 1.2rem;
+      line-height: 1.8;
+    }
+
+    .artifact-page-hero .meta-tag {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+    }
+
+    /* ===== Particle Background ===== */
+    .particle-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .particle-bg .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: particleRise linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes particleRise {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% {
+        transform: translateY(-20vh) scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* ===== Hero Grid Pattern ===== */
+    .hero-grid-pattern {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(124, 58, 237, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 80%);
+    }
+
+    /* ===== Hero Stats Bar ===== */
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-stat {
+      text-align: left;
+    }
+
+    .hero-stat .stat-number {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .hero-stat .stat-label {
+      font-size: 0.8rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+    }
+
+    /* ===== Glass Card ===== */
+    .glass-card {
+      background: rgba(248, 250, 252, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card:hover {
+      background: rgba(248, 250, 252, 0.85);
+      border-color: rgba(37, 99, 235, 0.25);
+      box-shadow:
+        0 8px 32px rgba(37, 99, 235, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      transform: translateY(-4px);
+    }
+
+    /* ===== Tilt Card ===== */
+    .tilt-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .tilt-card:hover {
+      box-shadow:
+        0 20px 40px rgba(37, 99, 235, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    /* ===== Info Card Enhancements ===== */
+    .info-card.glass-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-card.glass-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .info-card.glass-card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .info-card.glass-card h4 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-card.glass-card h4::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 1em;
+      background: var(--gradient);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ===== Enhanced Artifact Content ===== */
+    .artifact-content {
+      position: relative;
+    }
+
+    .artifact-content::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ===== Comparison Section ===== */
+    .comparison-section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .comparison-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Intro cards: ML vs DL */
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    .intro-card {
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+
+    .intro-card.ml-card::before {
+      background: linear-gradient(90deg, #2563eb, #3b82f6);
+    }
+
+    .intro-card.dl-card::before {
+      background: linear-gradient(90deg, #7c3aed, #a78bfa);
+    }
+
+    .intro-card h3 {
+      font-size: 1.35rem;
+      margin-bottom: 1rem;
+    }
+
+    .intro-card .accent-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .ml-card .accent-label {
+      background: rgba(37, 99, 235, 0.1);
+      color: #2563eb;
+    }
+
+    .dl-card .accent-label {
+      background: rgba(124, 58, 237, 0.1);
+      color: #7c3aed;
+    }
+
+    .intro-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .intro-card ul li {
+      padding: 0.35rem 0;
+      padding-left: 1.25rem;
+      position: relative;
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+
+    .intro-card ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .ml-card ul li::before {
+      background: #2563eb;
+    }
+
+    .dl-card ul li::before {
+      background: #7c3aed;
+    }
+
+    /* ===== Case Study Cards ===== */
+    .case-study {
+      margin-top: 4rem;
+    }
+
+    .case-study-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .case-study-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .case-study.ml-case .case-study-number {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+    }
+
+    .case-study.dl-case .case-study-number {
+      background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    }
+
+    .case-study-header h3 {
+      font-size: 1.5rem;
+    }
+
+    .case-study-header .case-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+    }
+
+    .case-study.ml-case .case-label {
+      color: #2563eb;
+    }
+
+    .case-study.dl-case .case-label {
+      color: #7c3aed;
+    }
+
+    .case-study-body {
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+    }
+
+    .case-study-body > p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+    }
+
+    .suitability-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .suit-card {
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .suit-card h4 {
+      font-size: 1.05rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .suit-card h4 .icon {
+      font-size: 1.1rem;
+    }
+
+    .suit-card.suits h4 .icon {
+      color: var(--success);
+    }
+
+    .suit-card.doesnt h4 .icon {
+      color: #ef4444;
+    }
+
+    .suit-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .suit-card ul li {
+      padding: 0.3rem 0;
+      padding-left: 1rem;
+      position: relative;
+      color: var(--text-light);
+      font-size: 0.93rem;
+      line-height: 1.6;
+    }
+
+    .suit-card.suits ul li::before {
+      content: '+';
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .suit-card.doesnt ul li::before {
+      content: '\2013';
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+      color: #ef4444;
+    }
+
+    /* ===== Key Differences Section ===== */
+    .differences-section {
+      position: relative;
+    }
+
+    .diff-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .diff-card {
+      padding: 1.75rem;
+      border-radius: var(--radius-lg);
+    }
+
+    .diff-card h4 {
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+    }
+
+    .diff-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .diff-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      min-width: 32px;
+      padding-top: 0.15rem;
+    }
+
+    .diff-label.ml {
+      color: #2563eb;
+    }
+
+    .diff-label.dl {
+      color: #7c3aed;
+    }
+
+    .diff-value {
+      font-size: 0.93rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* ===== Conclusion ===== */
+    .conclusion-card {
+      padding: 2.5rem;
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+      margin-top: 2.5rem;
+    }
+
+    .conclusion-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient);
+    }
+
+    .conclusion-card h3 {
+      margin-bottom: 1rem;
+    }
+
+    .conclusion-card p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-light);
+    }
+
+    /* ===== References ===== */
+    .references-section .info-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .references-section .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient);
+    }
+
+    .references-section .info-card ul li {
+      padding: 0.4rem 0;
+      transition: all 0.2s ease;
+    }
+
+    .references-section .info-card ul li:hover {
+      padding-left: 0.5rem;
+      color: var(--text);
+    }
+
+    /* ===== Enhanced Footer ===== */
+    .footer {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--gradient);
+    }
+
+    /* ===== Reduced Motion ===== */
+    @media (prefers-reduced-motion: reduce) {
+      .particle-bg .particle {
+        animation: none;
+        display: none;
+      }
+
+      .tilt-card:hover,
+      .glass-card:hover {
+        transform: none;
+      }
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .artifact-page-hero {
+        padding: 8rem 0 3rem;
+      }
+
+      .artifact-page-hero h1 {
+        font-size: 2.25rem;
+      }
+
+      .hero-stats {
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .hero-stat .stat-number {
+        font-size: 1.5rem;
+      }
+
+      .intro-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .suitability-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .diff-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+    /* ===== Artifact 1: infographic and algorithm table ===== */
+    .map-figure { padding: 1rem; }
+    .map-scroll { overflow-x: auto; border-radius: 12px; }
+    .map-scroll img { display: block; width: 100%; min-width: 900px; height: auto; border-radius: 10px; background: #f4f7fb; }
+    .map-caption { margin-top: 0.75rem; font-size: 0.9rem; color: var(--text-light); }
+    .map-caption a { color: var(--primary, #2563eb); font-weight: 600; }
+    .algo-table-wrap { overflow-x: auto; margin-top: 1.5rem; border-radius: 12px; }
+    .algo-table { width: 100%; min-width: 820px; border-collapse: collapse; font-size: 0.92rem; background: rgba(255,255,255,0.7); }
+    .algo-table th, .algo-table td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid rgba(148,163,184,0.35); vertical-align: top; color: var(--text-light); }
+    .algo-table thead th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; background: rgba(37,99,235,0.08); color: #1e293b; }
+    .algo-table tbody th { color: #0f172a; font-weight: 600; }
+    .learn-badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+    .learn-sup { background: #0f172a; color: #fff; }
+    .learn-self { background: #dde4f0; color: #0f172a; border: 1.5px solid #0f172a; }
+    .learn-uns { background: #fff; color: #5b45a8; border: 1.5px solid #5b45a8; }
+
+    /* ===== Deep dives ===== */
+    .deep-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .deep-card { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.75rem; padding: 1.75rem; align-items: start; }
+    .deep-card:nth-child(even) .deep-fig { order: -1; }
+    .deep-badges { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin-bottom: 0.5rem; }
+    .deep-domain { font-size: 0.82rem; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; }
+    .deep-text h3 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+    .deep-text h4 { margin: 1rem 0 0.4rem; font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; color: #2563eb; }
+    .deep-intro { font-size: 1.02rem; color: #0f172a; }
+    .deep-text ol { padding-left: 1.25rem; line-height: 1.7; color: var(--text-light); font-size: 0.95rem; }
+    .deep-text ol li { margin-bottom: 0.35rem; }
+    .deep-text p { margin: 0.7rem 0 0; color: var(--text-light); font-size: 0.95rem; line-height: 1.7; }
+    .deep-note { border-left: 3px solid #cbd5e1; padding-left: 0.8rem; }
+    .deep-fig { margin: 0; position: sticky; top: 90px; }
+    .deep-fig img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid rgba(148,163,184,0.4); background: #fff; }
+    @media (max-width: 860px) { .deep-card { grid-template-columns: 1fr; } .deep-card:nth-child(even) .deep-fig { order: 0; } .deep-fig { position: static; } }
+  
+    /* ===== Slide viewer ===== */
+    .viewer{max-width:1000px;margin:0 auto}
+    .viewer-stage{position:relative;border-radius:14px;overflow:hidden;box-shadow:0 10px 40px rgba(15,23,42,.18);background:#f8fafc;aspect-ratio:16/9}
+    .viewer-stage img{display:block;width:100%;height:100%;object-fit:contain}
+    .viewer-stage img[hidden]{display:none}
+    .viewer-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:1rem 0}
+    .viewer-btn{border:0;background:#2563eb;color:#fff;font:600 .95rem Inter,sans-serif;padding:.6rem 1.2rem;border-radius:10px;cursor:pointer}
+    .viewer-btn:disabled{opacity:.4;cursor:default}
+    .viewer-count{font-weight:600;color:var(--text-light)}
+    .thumbs{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem}
+    .thumbs button{padding:0;border:2px solid transparent;border-radius:8px;overflow:hidden;cursor:pointer;background:none}
+    .thumbs button[aria-current="true"]{border-color:#2563eb}
+    .thumbs img{display:block;width:100%;height:auto}
+    .dl-row{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-top:1.25rem}
+    .dl-row a{padding:.6rem 1.2rem;border-radius:10px;border:2px solid #2563eb;color:#2563eb;font-weight:600;text-decoration:none}
+    .dl-row a:hover{background:#2563eb;color:#fff}
+    @media(max-width:700px){.thumbs{grid-template-columns:repeat(4,1fr)}.viewer-btn{padding:.5rem .8rem}}
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="container">
+      <a href="../../index.html" class="nav-brand"><span>DP</span> Portfolio</a>
+      <ul class="nav-links">
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../../index.html#artifacts">Artifacts</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section class="artifact-page-hero">
+      <div class="hero-grid-pattern" aria-hidden="true"></div>
+      <div class="particle-bg" aria-hidden="true"></div>
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="../../index.html">Home</a>
+          <span aria-hidden="true">/</span>
+          <a href="../../index.html#artifacts">Artifacts</a>
+          <span aria-hidden="true">/</span>
+          <span class="breadcrumb-current" aria-current="page">Neural Network Components</span>
+        </nav>
+        <div class="hero-tag">Artifact 2 &bull; Workshop 2.4</div>
+        <h1>Inside a <span class="gradient-text">Neural Network</span></h1>
+        <p class="artifact-hero-desc">A 14-slide visual presentation that explains the six building blocks of a neural network, backed by my own experiments in the TensorFlow Playground.</p>
+        <div class="artifact-meta">
+          <span class="meta-tag">November 2026</span>
+          <span class="meta-tag">IWU - AIML Course</span>
+          <span class="meta-tag">Visual Presentation</span>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><span class="stat-number">6</span><span class="stat-label">Components</span></div>
+          <div class="hero-stat"><span class="stat-number">14</span><span class="stat-label">Slides</span></div>
+          <div class="hero-stat"><span class="stat-number">13</span><span class="stat-label">Experiments</span></div>
+          <div class="hero-stat"><span class="stat-number">137</span><span class="stat-label">Weights and biases counted</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="artifact-content reveal">
+      <div class="container">
+        <div class="artifact-info-grid">
+          <div class="info-card glass-card reveal" data-delay="0">
+            <h4>Introduction</h4>
+            <p>This is my second portfolio artifact, for Workshop 2.4. Neural networks are described everywhere as black boxes, and I wanted to see inside one. In my Salesforce work I use models through Einstein and Agentforce without ever seeing their internals, so this was a chance to understand what is actually happening between the input and the prediction.</p>
+          </div>
+          <div class="info-card glass-card reveal" data-delay="50">
+            <h4>Description</h4>
+            <p>The artifact is a 14-slide deck. It opens with one diagram of a whole network, then gives each of the six components its own slide: layers, neurons, weights, activation functions, loss functions and optimization algorithms. After a slide on the training loop come three slides of results from my Playground experiments, and a summary slide on why visualizing networks helps.</p>
+          </div>
+          <div class="info-card glass-card reveal" data-delay="100">
+            <h4>Objective</h4>
+            <p>To define each component clearly, show how data flows from input to output, and back every explanation with something I observed myself rather than only a textbook definition.</p>
+          </div>
+          <div class="info-card glass-card reveal" data-delay="150">
+            <h4>Process</h4>
+            <ol style="padding-left:1.25rem;line-height:1.9;color:var(--text-light);font-size:0.95rem;">
+              <li>Practiced in the TensorFlow Playground, changing one setting at a time: data set, noise, hidden layers, input features, activation function and learning rate.</li>
+              <li>Ran 13 configurations with the same random seed for about 500 epochs each, and recorded training and test loss so runs could be compared fairly.</li>
+              <li>Drew the architecture, neuron, activation and gradient descent diagrams from scratch so each one shows a specific idea.</li>
+              <li>Wrote each explanation in plain language, then added the matching result from my own runs.</li>
+              <li>Built the slides in HTML and CSS, exported them as images, a PDF and a PowerPoint file, and checked the text size and contrast.</li>
+            </ol>
+          </div>
+          <div class="info-card glass-card reveal" data-delay="200">
+            <h4>Tools</h4>
+            <ul style="padding-left:1.25rem;line-height:1.9;color:var(--text-light);font-size:0.95rem;">
+              <li><strong>TensorFlow Neural Network Playground</strong> for the experiments and screenshots.</li>
+              <li><strong>HTML, CSS and SVG</strong> for the slides and diagrams, and <strong>Playwright</strong> to export them as images and PDF.</li>
+              <li><strong>Python</strong> to automate the experiment runs and read the loss values.</li>
+              <li><strong>An AI assistant (Claude)</strong> to help with the code and first drafts. I checked each explanation against my sources and my own results and edited the wording.</li>
+            </ul>
+          </div>
+          <div class="info-card glass-card reveal" data-delay="250">
+            <h4>Value Proposition</h4>
+            <p>It shows that I can take a technical topic, test it hands on, and explain it simply. Teams that adopt AI need people who can say why a model is behaving a certain way, not only which tool to click.</p>
+          </div>
+          <div class="info-card glass-card full-width reveal" data-delay="300">
+            <h4>Unique Value</h4>
+            <p>Artifact 1 was about choosing between algorithms. This one goes inside a single algorithm family. Every component slide pairs a definition with a number from an experiment I ran, such as ReLU reaching a test loss of 0.006 against 0.293 for sigmoid on the same network. I also state the limits: the Playground is a small two-dimensional toy and shows concepts, not the behavior of large systems.</p>
+          </div>
+          <div class="info-card glass-card full-width reveal" data-delay="350">
+            <h4>Relevance</h4>
+            <p>Agentforce and Einstein rely on neural networks, and large language models are built from the same parts at a much larger scale. Knowing what weights, activations and a learning rate do helps me ask better questions of data science teams and explain model behavior to business stakeholders. It also connects to the Python and NLP work in my other courses.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="comparison-section" id="presentation">
+      <div class="container">
+        <div class="section-label" style="text-align:center;display:block;">The Presentation</div>
+        <h2>Visual Presentation</h2>
+        <div class="viewer glass-card reveal" id="viewer" style="padding:1.25rem;">
+          <div class="viewer-stage" id="stage" aria-live="polite"><img src="slides/slide_01.png" alt="Title slide: Inside a Neural Network, six components explained visually." data-i="0" hidden><img src="slides/slide_02.png" alt="Diagram of a neural network with an input layer of three nodes, two hidden layers of four neurons and one output node, with lines for weights, an activation curve inside each neuron, a loss box at the right and a dashed arrow showing the optimizer sending the error back." data-i="1" hidden><img src="slides/slide_03.png" alt="Slide describing the input layer, hidden layers and output layer, with a result from the Playground: test loss 0.503 with no hidden layer and 0.010 with four hidden neurons." data-i="2" hidden><img src="slides/slide_04.png" alt="Diagram of one neuron that multiplies inputs 0.5 and -1.0 by weights 0.8 and 0.3, adds a bias of 0.1 to get 0.2, and applies tanh to output 0.197." data-i="3" hidden><img src="slides/slide_05.png" alt="Slide explaining weights and biases, with a parameter count for the spiral network: 120 weights plus 17 biases equals 137 learned numbers." data-i="4" hidden><img src="slides/slide_06.png" alt="Plots of the sigmoid, tanh and ReLU activation functions with notes on each, and the spiral test losses of 0.006 for ReLU, 0.065 for tanh and 0.293 for sigmoid." data-i="5" hidden><img src="slides/slide_07.png" alt="Slide about loss functions with the mean squared error and cross-entropy formulas and a table of train and test loss for three networks on the circle data." data-i="6" hidden><img src="slides/slide_08.png" alt="Gradient descent diagram: a ball rolling down a loss curve in steps, with the update rule w equals w minus eta times the gradient, and a table of test loss for learning rates 0.001, 0.03 and 3." data-i="7" hidden><img src="slides/slide_09.png" alt="Four-step training loop: forward pass, measure loss, backpropagate, update weights." data-i="8" hidden><img src="slides/slide_10.png" alt="Screenshot of the TensorFlow Playground with the spiral data, two hidden layers of eight neurons and ReLU after 503 epochs, with a list of the settings I varied." data-i="9" hidden><img src="slides/slide_11.png" alt="Three Playground output panels for the circle data with no hidden layer, one hidden layer of four neurons, and two hidden layers of four and two neurons, with test losses 0.503, 0.010 and 0.004." data-i="10" hidden><img src="slides/slide_12.png" alt="Three Playground output panels: circle with no noise, circle with noise 40, and spiral with a small network, with their train and test losses." data-i="11" hidden><img src="slides/slide_13.png" alt="Three Playground output panels for the spiral data using tanh, ReLU and sigmoid with the same two layers of eight neurons, with test losses 0.065, 0.006 and 0.293." data-i="12" hidden><img src="slides/slide_14.png" alt="Summary slide on why visualizing neural networks matters and the key insights from the experiments." data-i="13" hidden><noscript><p style="padding:2rem">Turn on JavaScript to flip through the slides here, or open the <a href="Neural_Network_Components.pdf">PDF</a>.</p></noscript></div>
+          <div class="viewer-bar">
+            <button class="viewer-btn" id="prev" type="button">&#8592; Previous</button>
+            <span class="viewer-count" id="count">Slide 1 of 14</span>
+            <button class="viewer-btn" id="next" type="button">Next &#8594;</button>
+          </div>
+          <div class="thumbs" id="thumbs"><button type="button" data-go="0" aria-label="Go to slide 1: Inside a Neural Network"><img src="slides/slide_01.png" alt="" loading="lazy"></button><button type="button" data-go="1" aria-label="Go to slide 2: How a neural network is put together"><img src="slides/slide_02.png" alt="" loading="lazy"></button><button type="button" data-go="2" aria-label="Go to slide 3: Layers"><img src="slides/slide_03.png" alt="" loading="lazy"></button><button type="button" data-go="3" aria-label="Go to slide 4: Neurons"><img src="slides/slide_04.png" alt="" loading="lazy"></button><button type="button" data-go="4" aria-label="Go to slide 5: Weights and biases"><img src="slides/slide_05.png" alt="" loading="lazy"></button><button type="button" data-go="5" aria-label="Go to slide 6: Activation functions"><img src="slides/slide_06.png" alt="" loading="lazy"></button><button type="button" data-go="6" aria-label="Go to slide 7: Loss functions"><img src="slides/slide_07.png" alt="" loading="lazy"></button><button type="button" data-go="7" aria-label="Go to slide 8: Optimization algorithms"><img src="slides/slide_08.png" alt="" loading="lazy"></button><button type="button" data-go="8" aria-label="Go to slide 9: One training step"><img src="slides/slide_09.png" alt="" loading="lazy"></button><button type="button" data-go="9" aria-label="Go to slide 10: Playground setup"><img src="slides/slide_10.png" alt="" loading="lazy"></button><button type="button" data-go="10" aria-label="Go to slide 11: Layers and neurons"><img src="slides/slide_11.png" alt="" loading="lazy"></button><button type="button" data-go="11" aria-label="Go to slide 12: Noise and harder data"><img src="slides/slide_12.png" alt="" loading="lazy"></button><button type="button" data-go="12" aria-label="Go to slide 13: Activation and features"><img src="slides/slide_13.png" alt="" loading="lazy"></button><button type="button" data-go="13" aria-label="Go to slide 14: Why visualizing matters"><img src="slides/slide_14.png" alt="" loading="lazy"></button></div>
+          <div class="dl-row">
+            <a href="Neural_Network_Components.pdf">Open the PDF</a>
+            <a href="Neural_Network_Components.pptx" download>Download the PowerPoint file</a>
+          </div>
+          <p class="map-caption" style="text-align:center;margin-top:1rem;">Use the arrow keys or the buttons to move between slides. The PowerPoint file holds each slide as an image with speaker notes.</p>
+        </div>
+
+        <h3 style="margin-top:2.5rem;">The six components at a glance</h3>
+        <div class="algo-table-wrap glass-card reveal">
+          <table class="algo-table">
+            <thead><tr><th>Component</th><th>What it is</th><th>What it does</th><th>What I observed</th></tr></thead>
+            <tbody><tr><th scope="row">Layers</th><td>Input, hidden and output stages of the network</td><td>Hidden layers build patterns from simple to complex</td><td>0.503 test loss with none, 0.010 with one layer of 4</td></tr><tr><th scope="row">Neurons</th><td>Small calculators: weighted sum plus bias, then an activation</td><td>Each neuron detects one pattern in its inputs</td><td>Worked example: 0.2 becomes 0.197 after tanh</td></tr><tr><th scope="row">Weights</th><td>Learned numbers on the connections</td><td>Store everything the network knows</td><td>137 parameters in my spiral network</td></tr><tr><th scope="row">Activation functions</th><td>Sigmoid, tanh and ReLU: non-linear bends</td><td>Without them, layers collapse into one line</td><td>ReLU 0.006, tanh 0.065, sigmoid 0.293 on the spiral</td></tr><tr><th scope="row">Loss functions</th><td>Mean squared error or cross-entropy</td><td>Give one number for how wrong the prediction is</td><td>Train 0.501 down to 0.001 as layers were added</td></tr><tr><th scope="row">Optimization algorithms</th><td>Gradient descent and its variants, step size set by the learning rate</td><td>Decide how weights change to lower the loss</td><td>Learning rate 0.001: 0.462, 0.03: 0.004, 3: 0.718</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="comparison-section">
+      <div class="container">
+        <div class="section-label" style="text-align:center;display:block;">Experiments</div>
+        <h2>What I Found in the Playground</h2>
+        <p style="max-width:70ch;margin:0 auto 2rem;text-align:center;">Every run used the same random seed, a learning rate of 0.03 unless stated, and about 500 epochs. Loss is the Playground's test loss; lower is better.</p>
+        <div class="algo-table-wrap glass-card reveal">
+          <table class="algo-table">
+            <thead><tr><th>Setting changed</th><th>Configuration</th><th>Train loss</th><th>Test loss</th></tr></thead>
+            <tbody>
+              <tr><th scope="row" rowspan="4">Layers (circle data, tanh)</th><td>No hidden layer</td><td>0.501</td><td>0.503</td></tr>
+              <tr><td>1 layer, 1 neuron</td><td>0.407</td><td>0.405</td></tr>
+              <tr><td>1 layer, 4 neurons</td><td>0.007</td><td>0.010</td></tr>
+              <tr><td>2 layers, 4 + 2 neurons</td><td>0.001</td><td>0.004</td></tr>
+              <tr><th scope="row" rowspan="2">Noise (circle, 4 + 2)</th><td>Noise 0</td><td>0.001</td><td>0.004</td></tr>
+              <tr><td>Noise 40</td><td>0.178</td><td>0.235</td></tr>
+              <tr><th scope="row" rowspan="2">Data set</th><td>XOR, 4 + 2, no noise</td><td>0.001</td><td>0.001</td></tr>
+              <tr><td>XOR, 4 + 2, noise 30</td><td>0.125</td><td>0.211</td></tr>
+              <tr><th scope="row" rowspan="4">Spiral data</th><td>4 + 2, tanh, raw x and y</td><td>0.362</td><td>0.525</td></tr>
+              <tr><td>8 + 8, tanh, extra features</td><td>0.006</td><td>0.065</td></tr>
+              <tr><td>8 + 8, ReLU, extra features</td><td>0.006</td><td>0.006</td></tr>
+              <tr><td>8 + 8, sigmoid, extra features</td><td>0.237</td><td>0.293</td></tr>
+              <tr><th scope="row" rowspan="3">Learning rate (circle, 4 + 2)</th><td>0.001</td><td>0.473</td><td>0.462</td></tr>
+              <tr><td>0.03</td><td>0.001</td><td>0.004</td></tr>
+              <tr><td>3</td><td>0.686</td><td>0.718</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="max-width:70ch;margin:1.25rem auto 0;text-align:center;color:var(--text-light);font-size:.95rem;">The extra features were x&sup2;, y&sup2;, sin(x) and sin(y). In the spiral rows I changed the network size and the features together, so that jump cannot be credited to one of them alone. These are single runs, so the exact numbers would shift with another seed.</p>
+      </div>
+    </section>
+
+    <section class="artifact-content reveal" id="reflection">
+      <div class="container">
+        <div class="section-label" style="text-align:center;display:block;">Reflection</div>
+        <h2>Artifact Reflection</h2>
+        <div class="info-card glass-card full-width reveal" style="margin-bottom:1.5rem;">
+          <h4>Lessons Learned</h4>
+          <p>Going into this assignment I thought of a neural network as a black box that somehow learns. Building the presentation and running experiments in the TensorFlow Playground changed that. The most useful moment was training a network with no hidden layers on the circle data and watching the test loss stay at about 0.5, then adding four neurons and seeing it drop to 0.01. Reading that layers add capacity is one thing. Seeing it happen is another.</p><p>I also learned how much the small settings matter. With the same network on the spiral data, ReLU reached a test loss of 0.006 while sigmoid was still at 0.293, and a learning rate of 3 left the model worse than a network with no hidden layers at all. Noise had a similar effect: the circle went from a test loss of 0.004 to 0.235 once I added noise.</p><p>The hardest part was explaining each component simply without getting it wrong. Weights and loss functions are easy to define but hard to picture, so I drew diagrams for the neuron, the activation curves and gradient descent, and I counted the 137 parameters in my spiral network by hand. I was also careful about what my experiments can prove. In the spiral runs I changed the network size and the inputs together, so I said that on the slides instead of crediting one of them.</p><p>Next time I would test regularization and overfitting, because some runs fit the training data much better than the test data. The main lesson is that visualizing a network turns it into something I can reason about and explain, which is what I need when I work with AI teams in my job.</p>
+        </div>
+        <div class="artifact-info-grid">
+          <div class="info-card glass-card reveal" data-delay="100">
+            <h4>Audience Customization</h4>
+            <p>The deck is written for classmates, instructors and hiring managers who have heard of neural networks but have not trained one. Each component gets a plain-language definition, one picture and one number from my experiments, and the formulas are kept to the one or two a reader would meet first.</p>
+          </div>
+          <div class="info-card glass-card reveal" data-delay="200">
+            <h4>Feedback and Revisions</h4>
+            <p>This artifact has not had a peer review yet. While building it I enlarged the Playground screenshots so the loss values can be read, removed a claim I had not tested, and added a note that two settings changed together in the spiral runs. After a review I would add a short section on overfitting and regularization.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="artifact-content references-section reveal">
+      <div class="container">
+        <div class="info-card glass-card full-width references-card">
+          <h4>References</h4>
+          <ul>
+            <li>Goodfellow, I., Bengio, Y., &amp; Courville, A. (2016). <em>Deep learning</em>. MIT Press. https://www.deeplearningbook.org/</li>
+            <li>Rumelhart, D. E., Hinton, G. E., &amp; Williams, R. J. (1986). Learning representations by back-propagating errors. <em>Nature</em>, 323(6088), 533&ndash;536.</li>
+            <li>Smilkov, D., Carter, S., Sculley, D., Vi&eacute;gas, F. B., &amp; Wattenberg, M. (2017). Direct-manipulation visualization of deep networks. <em>arXiv</em>. https://arxiv.org/abs/1708.03788</li>
+            <li>TensorFlow. (n.d.). <em>A Neural Network Playground</em> [Computer software]. https://playground.tensorflow.org/</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Deepthi Pinninti &bull; AIML Portfolio &copy; 2026</p>
+      <p class="footer-sub"><a href="../../index.html">&#8592; Back to Portfolio</a> | Built with GitHub Pages | Indiana Wesleyan University</p>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      var imgs=[].slice.call(document.querySelectorAll('#stage img')),btns=[].slice.call(document.querySelectorAll('#thumbs button'));
+      var cur=0,count=document.getElementById('count'),prev=document.getElementById('prev'),next=document.getElementById('next');
+      function show(i){cur=Math.max(0,Math.min(imgs.length-1,i));imgs.forEach(function(m,k){m.hidden=k!==cur;});btns.forEach(function(b,k){b.setAttribute('aria-current',k===cur?'true':'false');});count.textContent='Slide '+(cur+1)+' of '+imgs.length;prev.disabled=cur===0;next.disabled=cur===imgs.length-1;}
+      prev.onclick=function(){show(cur-1)};next.onclick=function(){show(cur+1)};
+      btns.forEach(function(b){b.onclick=function(){show(+b.getAttribute('data-go'))}});
+      document.addEventListener('keydown',function(e){var r=document.getElementById('viewer').getBoundingClientRect();if(r.bottom<0||r.top>window.innerHeight)return;if(e.key==='ArrowRight')show(cur+1);if(e.key==='ArrowLeft')show(cur-1);});
+      show(0);
+    })();
+  </script>
+  <script>
+    /* ===== Particle Generator ===== */
+    (function initParticles() {
+      var bg = document.querySelector('.particle-bg');
+      if (!bg) return;
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+
+      var colors = [
+        'rgba(37, 99, 235, 0.25)',
+        'rgba(124, 58, 237, 0.2)',
+        'rgba(37, 99, 235, 0.15)',
+        'rgba(124, 58, 237, 0.12)',
+        'rgba(59, 130, 246, 0.18)'
+      ];
+
+      for (var i = 0; i < 30; i++) {
+        var particle = document.createElement('div');
+        particle.classList.add('particle');
+        var size = Math.random() * 4 + 2;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+        particle.style.animationDelay = (Math.random() * 10) + 's';
+        bg.appendChild(particle);
+      }
+    })();
+  </script>
+  <script src="../../js/main.js" defer></script>
+</body>
+</html>
