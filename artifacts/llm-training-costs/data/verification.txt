@@ -1,0 +1,37 @@
+PASS  GPT-3 FLOPs from 3,640 PF-days vs 3.14e23 in paper: computed 3.145e+23 vs published 3.14e+23
+PASS  DeepSeek-V3 stage GPU-hours add to total: computed 2.788e+06 vs published 2.788e+06
+PASS  DeepSeek-V3 total cost = GPU-hours x $2: computed 5.576e+06 vs published 5.576e+06
+PASS  DeepSeek-V3 days per trillion tokens vs paper's 3.7: computed 3.662 vs published 3.7
+PASS  DeepSeek-V3 pre-training 14.8T tokens x 180K h/T = 2.664M h: computed 2.664e+06 vs published 2.664e+06
+PASS  Llama 2 70B emissions per MWh (t/MWh) plausible grid mix: computed 0.4235 vs published 0.42
+PASS  Llama 3.1 405B emissions per MWh (t/MWh) plausible grid mix: computed 0.4137 vs published 0.41
+PASS  Llama 3.1 interruptions planned + unexpected = total: computed 466 vs published 466
+PASS  GPT-3 compute from Patterson inputs (10,000 V100 x 14.8 d): computed 3.552e+06 vs published 3.552e+06
+PASS  Alignment compute as % of GPT-3 pre-training: computed 1.783 vs published 1.78
+PASS  Alignment share of total compute (pre-training + alignment): computed 1.752 vs published 1.75
+PASS  Llama 3.1 405B vs Llama 2 70B cost ratio at the same $/GPU-hour: computed 17.93 vs published 17.9
+PASS  Token growth GPT-3 to Llama 3.1 405B: computed 52 vs published 52
+PASS  Compute growth GPT-3 to Llama 3.1 405B: computed 120.8 vs published 121
+
+Derived values:
+  gpt3_flops = 3.145e+23
+  gpt3_gpu_hours = 3.552e+06
+  gpt3_kept_pct = 1.267
+  gpt3_homes = 119.2
+  llama2_energy_mwh = 688.1
+  llama2_cost = 3.441e+06
+  llama3_energy_mwh = 2.159e+04
+  llama3_cost = 6.168e+07
+  llama3_homes = 1,999
+  llama3_kg_per_mwh = 413.7
+  dsv3_energy_mwh = 1,952
+  dsv3_pre_days = 54.2
+  dsv3_days_per_trillion = 3.662
+  dsv3_post_pct = 0.1793
+  dsv3_cost_check = 5.576e+06
+  align_pct = 1.783
+  align_share_pct = 1.752
+  pretrain_share_pct = 98.25
+  llama_cost_ratio = 17.93
+  token_growth = 52
+  flop_growth = 120.8

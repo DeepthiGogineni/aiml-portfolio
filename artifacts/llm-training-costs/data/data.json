@@ -1,0 +1,107 @@
+{
+  "assumptions": {
+    "rate_usd_per_gpu_hour": 2.0,
+    "kwh_per_home": 10800
+  },
+  "derived": {
+    "gpt3_flops": 3.14496e+23,
+    "gpt3_gpu_hours": 3552000.0,
+    "gpt3_kept_pct": 1.2666666666666666,
+    "gpt3_homes": 119.16666666666667,
+    "llama2_energy_mwh": 688.128,
+    "llama2_cost": 3440640.0,
+    "llama3_energy_mwh": 21588.0,
+    "llama3_cost": 61680000.0,
+    "llama3_homes": 1998.888888888889,
+    "llama3_kg_per_mwh": 413.65573466740784,
+    "dsv3_energy_mwh": 1951.6,
+    "dsv3_pre_days": 54.19921875,
+    "dsv3_days_per_trillion": 3.662109375,
+    "dsv3_post_pct": 0.1793400286944046,
+    "dsv3_cost_check": 5576000.0,
+    "align_pct": 1.7829670329670333,
+    "align_share_pct": 1.7517341898566765,
+    "pretrain_share_pct": 98.24826581014332,
+    "llama_cost_ratio": 17.926897321428573,
+    "token_growth": 52.0,
+    "flop_growth": 120.82824582824584
+  },
+  "models": [
+    {
+      "name": "GPT-3",
+      "org": "OpenAI",
+      "year": 2020,
+      "params_b": 175,
+      "tokens_b": 300,
+      "pf_days": 3640,
+      "raw_text_tb": 45,
+      "kept_text_gb": 570,
+      "energy_mwh": 1287,
+      "co2_t": 552,
+      "gpus": 10000,
+      "gpu_type": "V100",
+      "days": 14.8
+    },
+    {
+      "name": "GPT-4",
+      "org": "OpenAI",
+      "year": 2023,
+      "flops": 2.1e+25,
+      "cost_usd": 78000000.0
+    },
+    {
+      "name": "Gemini Ultra",
+      "org": "Google",
+      "year": 2023,
+      "cost_usd": 191000000.0
+    },
+    {
+      "name": "Llama 2 70B",
+      "org": "Meta",
+      "year": 2023,
+      "params_b": 70,
+      "tokens_b": 2000,
+      "gpu_hours": 1720320,
+      "gpu_type": "A100-80GB",
+      "watts": 400,
+      "co2_t": 291.42
+    },
+    {
+      "name": "Llama 3.1 405B",
+      "org": "Meta",
+      "year": 2024,
+      "params_b": 405,
+      "tokens_b": 15600,
+      "flops": 3.8e+25,
+      "gpu_hours": 30840000,
+      "gpu_type": "H100-80GB",
+      "watts": 700,
+      "co2_t": 8930,
+      "gpus": 16384,
+      "window_days": 54,
+      "interruptions": 466,
+      "planned": 47,
+      "unexpected": 419
+    },
+    {
+      "name": "DeepSeek-V3",
+      "org": "DeepSeek",
+      "year": 2024,
+      "params_b": 671,
+      "active_b": 37,
+      "tokens_b": 14800,
+      "gpu_hours_pre": 2664000,
+      "gpu_hours_ctx": 119000,
+      "gpu_hours_post": 5000,
+      "gpu_hours": 2788000,
+      "gpus": 2048,
+      "gpu_type": "H800",
+      "cost_usd": 5576000.0,
+      "rate": 2.0
+    }
+  ],
+  "instructgpt": {
+    "sft_pfd": 4.9,
+    "ppo_pfd": 60
+  }
+}

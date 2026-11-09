@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Training Process and Costs | Deepthi Pinninti Portfolio</title>
+  <meta name="description" content="An infographic of the nine stages of training a large language model and the data, compute, energy, time and dollar costs behind GPT-3, Llama, DeepSeek-V3 and other models, with every figure tagged by evidence quality.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    /* ===== Enhanced Hero ===== */
+    .artifact-page-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 10rem 0 5rem;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #0f172a 100%);
+      color: #f1f5f9;
+    }
+
+    .artifact-page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 20% 50%, rgba(37, 99, 235, 0.15) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 350px at 80% 30%, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .artifact-page-hero .container {
+      position: relative;
+      z-index: 2;
+    }
+
+    .artifact-page-hero h1 {
+      color: #f1f5f9;
+      font-size: 3.25rem;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .artifact-page-hero .breadcrumb a {
+      color: #94a3b8;
+    }
+
+    .artifact-page-hero .breadcrumb a:hover {
+      color: #e2e8f0;
+    }
+
+    .artifact-page-hero .breadcrumb span {
+      color: #64748b;
+    }
+
+    .artifact-page-hero .breadcrumb .breadcrumb-current {
+      color: #93c5fd;
+    }
+
+    .artifact-page-hero .hero-tag {
+      background: rgba(124, 58, 237, 0.2);
+      border: 1px solid rgba(124, 58, 237, 0.35);
+      color: #c4b5fd;
+    }
+
+    .artifact-page-hero .artifact-hero-desc {
+      color: #94a3b8;
+      font-size: 1.2rem;
+      line-height: 1.8;
+    }
+
+    .artifact-page-hero .meta-tag {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+    }
+
+    /* ===== Particle Background ===== */
+    .particle-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .particle-bg .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: particleRise linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes particleRise {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% {
+        transform: translateY(-20vh) scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* ===== Hero Grid Pattern ===== */
+    .hero-grid-pattern {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(124, 58, 237, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 80%);
+    }
+
+    /* ===== Hero Stats Bar ===== */
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-stat {
+      text-align: left;
+    }
+
+    .hero-stat .stat-number {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .hero-stat .stat-label {
+      font-size: 0.8rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+    }
+
+    /* ===== Glass Card ===== */
+    .glass-card {
+      background: rgba(248, 250, 252, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card:hover {
+      background: rgba(248, 250, 252, 0.85);
+      border-color: rgba(37, 99, 235, 0.25);
+      box-shadow:
+        0 8px 32px rgba(37, 99, 235, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      transform: translateY(-4px);
+    }
+
+    /* ===== Tilt Card ===== */
+    .tilt-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .tilt-card:hover {
+      box-shadow:
+        0 20px 40px rgba(37, 99, 235, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    /* ===== Info Card Enhancements ===== */
+    .info-card.glass-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-card.glass-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .info-card.glass-card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .info-card.glass-card h4 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-card.glass-card h4::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 1em;
+      background: var(--gradient);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ===== Enhanced Artifact Content ===== */
+    .artifact-content {
+      position: relative;
+    }
+
+    .artifact-content::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ===== Comparison Section ===== */
+    .comparison-section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .comparison-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Intro cards: ML vs DL */
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    .intro-card {
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+
+    .intro-card.ml-card::before {
+      background: linear-gradient(90deg, #2563eb, #3b82f6);
+    }
+
+    .intro-card.dl-card::before {
+      background: linear-gradient(90deg, #7c3aed, #a78bfa);
+    }
+
+    .intro-card h3 {
+      font-size: 1.35rem;
+      margin-bottom: 1rem;
+    }
+
+    .intro-card .accent-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .ml-card .accent-label {
+      background: rgba(37, 99, 235, 0.1);
+      color: #2563eb;
+    }
+
+    .dl-card .accent-label {
+      background: rgba(124, 58, 237, 0.1);
+      color: #7c3aed;
+    }
+
+    .intro-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .intro-card ul li {
+      padding: 0.35rem 0;
+      padding-left: 1.25rem;
+      position: relative;
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+
+    .intro-card ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .ml-card ul li::before {
+      background: #2563eb;
+    }
+
+    .dl-card ul li::before {
+      background: #7c3aed;
+    }
+
+    /* ===== Case Study Cards ===== */
+    .case-study {
+      margin-top: 4rem;
+    }
+
+    .case-study-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .case-study-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .case-study.ml-case .case-study-number {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+    }
+
+    .case-study.dl-case .case-study-number {
+      background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    }
+
+    .case-study-header h3 {
+      font-size: 1.5rem;
+    }
+
+    .case-study-header .case-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+    }
+
+    .case-study.ml-case .case-label {
+      color: #2563eb;
+    }
+
+    .case-study.dl-case .case-label {
+      color: #7c3aed;
+    }
+
+    .case-study-body {
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+    }
+
+    .case-study-body > p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+    }
+
+    .suitability-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .suit-card {
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .suit-card h4 {
+      font-size: 1.05rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .suit-card h4 .icon {
+      font-size: 1.1rem;
+    }
+
+    .suit-card.suits h4 .icon {
+      color: var(--success);
+    }
+
+    .suit-card.doesnt h4 .icon {
+      color: #ef4444;
+    }
+
+    .suit-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .suit-card ul li {
+      padding: 0.3rem 0;
+      padding-left: 1rem;
+      position: relative;
+      color: var(--text-light);
+      font-size: 0.93rem;
+      line-height: 1.6;
+    }
+
+    .suit-card.suits ul li::before {
+      content: '+';
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .suit-card.doesnt ul li::before {
+      content: '\2013';
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+      color: #ef4444;
+    }
+
+    /* ===== Key Differences Section ===== */
+    .differences-section {
+      position: relative;
+    }
+
+    .diff-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .diff-card {
+      padding: 1.75rem;
+      border-radius: var(--radius-lg);
+    }
+
+    .diff-card h4 {
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+    }
+
+    .diff-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .diff-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      min-width: 32px;
+      padding-top: 0.15rem;
+    }
+
+    .diff-label.ml {
+      color: #2563eb;
+    }
+
+    .diff-label.dl {
+      color: #7c3aed;
+    }
+
+    .diff-value {
+      font-size: 0.93rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* ===== Conclusion ===== */
+    .conclusion-card {
+      padding: 2.5rem;
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+      margin-top: 2.5rem;
+    }
+
+    .conclusion-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient);
+    }
+
+    .conclusion-card h3 {
+      margin-bottom: 1rem;
+    }
+
+    .conclusion-card p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-light);
+    }
+
+    /* ===== References ===== */
+    .references-section .info-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .references-section .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient);
+    }
+
+    .references-section .info-card ul li {
+      padding: 0.4rem 0;
+      transition: all 0.2s ease;
+    }
+
+    .references-section .info-card ul li:hover {
+      padding-left: 0.5rem;
+      color: var(--text);
+    }
+
+    /* ===== Enhanced Footer ===== */
+    .footer {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--gradient);
+    }
+
+    /* ===== Reduced Motion ===== */
+    @media (prefers-reduced-motion: reduce) {
+      .particle-bg .particle {
+        animation: none;
+        display: none;
+      }
+
+      .tilt-card:hover,
+      .glass-card:hover {
+        transform: none;
+      }
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .artifact-page-hero {
+        padding: 8rem 0 3rem;
+      }
+
+      .artifact-page-hero h1 {
+        font-size: 2.25rem;
+      }
+
+      .hero-stats {
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .hero-stat .stat-number {
+        font-size: 1.5rem;
+      }
+
+      .intro-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .suitability-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .diff-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+    /* ===== Artifact 1: infographic and algorithm table ===== */
+    .map-figure { padding: 1rem; }
+    .map-scroll { overflow-x: auto; border-radius: 12px; }
+    .map-scroll img { display: block; width: 100%; min-width: 900px; height: auto; border-radius: 10px; background: #f4f7fb; }
+    .map-caption { margin-top: 0.75rem; font-size: 0.9rem; color: var(--text-light); }
+    .map-caption a { color: var(--primary, #2563eb); font-weight: 600; }
+    .algo-table-wrap { overflow-x: auto; margin-top: 1.5rem; border-radius: 12px; }
+    .algo-table { width: 100%; min-width: 820px; border-collapse: collapse; font-size: 0.92rem; background: rgba(255,255,255,0.7); }
+    .algo-table th, .algo-table td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid rgba(148,163,184,0.35); vertical-align: top; color: var(--text-light); }
+    .algo-table thead th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; background: rgba(37,99,235,0.08); color: #1e293b; }
+    .algo-table tbody th { color: #0f172a; font-weight: 600; }
+    .learn-badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+    .learn-sup { background: #0f172a; color: #fff; }
+    .learn-self { background: #dde4f0; color: #0f172a; border: 1.5px solid #0f172a; }
+    .learn-uns { background: #fff; color: #5b45a8; border: 1.5px solid #5b45a8; }
+
+    /* ===== Deep dives ===== */
+    .deep-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .deep-card { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.75rem; padding: 1.75rem; align-items: start; }
+    .deep-card:nth-child(even) .deep-fig { order: -1; }
+    .deep-badges { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin-bottom: 0.5rem; }
+    .deep-domain { font-size: 0.82rem; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; }
+    .deep-text h3 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+    .deep-text h4 { margin: 1rem 0 0.4rem; font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; color: #2563eb; }
+    .deep-intro { font-size: 1.02rem; color: #0f172a; }
+    .deep-text ol { padding-left: 1.25rem; line-height: 1.7; color: var(--text-light); font-size: 0.95rem; }
+    .deep-text ol li { margin-bottom: 0.35rem; }
+    .deep-text p { margin: 0.7rem 0 0; color: var(--text-light); font-size: 0.95rem; line-height: 1.7; }
+    .deep-note { border-left: 3px solid #cbd5e1; padding-left: 0.8rem; }
+    .deep-fig { margin: 0; position: sticky; top: 90px; }
+    .deep-fig img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid rgba(148,163,184,0.4); background: #fff; }
+    @media (max-width: 860px) { .deep-card { grid-template-columns: 1fr; } .deep-card:nth-child(even) .deep-fig { order: 0; } .deep-fig { position: static; } }
+  
+    /* ===== Slide viewer ===== */
+    .viewer{max-width:1000px;margin:0 auto}
+    .viewer-stage{position:relative;border-radius:14px;overflow:hidden;box-shadow:0 10px 40px rgba(15,23,42,.18);background:#f8fafc;aspect-ratio:16/9}
+    .viewer-stage img{display:block;width:100%;height:100%;object-fit:contain}
+    .viewer-stage img[hidden]{display:none}
+    .viewer-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:1rem 0}
+    .viewer-btn{border:0;background:#2563eb;color:#fff;font:600 .95rem Inter,sans-serif;padding:.6rem 1.2rem;border-radius:10px;cursor:pointer}
+    .viewer-btn:disabled{opacity:.4;cursor:default}
+    .viewer-count{font-weight:600;color:var(--text-light)}
+    .thumbs{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem}
+    .thumbs button{padding:0;border:2px solid transparent;border-radius:8px;overflow:hidden;cursor:pointer;background:none}
+    .thumbs button[aria-current="true"]{border-color:#2563eb}
+    .thumbs img{display:block;width:100%;height:auto}
+    .dl-row{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-top:1.25rem}
+    .dl-row a{padding:.6rem 1.2rem;border-radius:10px;border:2px solid #2563eb;color:#2563eb;font-weight:600;text-decoration:none}
+    .dl-row a:hover{background:#2563eb;color:#fff}
+    @media(max-width:700px){.thumbs{grid-template-columns:repeat(4,1fr)}.viewer-btn{padding:.5rem .8rem}}
+  
+    .map-figure { padding: 1rem; }
+    .map-scroll { overflow-x: auto; border-radius: 12px; }
+    .map-scroll img { display: block; width: 100%; min-width: 900px; height: auto; border-radius: 10px; background: #f4f7fb; }
+    .map-caption { margin-top: 0.75rem; font-size: 0.95rem; color: var(--text-light); }
+    .map-caption a { color: #2563eb; font-weight: 600; }
+    .dl-row.left { justify-content: flex-start; margin-top: 1.5rem; }
+    .dl-row.hero-links { margin-top: 1.75rem; }
+    .dl-row.hero-links a { border-color: rgba(147,197,253,.7); color: #bfdbfe; }
+    .dl-row.hero-links a:hover { background: #2563eb; color: #fff; }
+    .algo-table td.c, .algo-table th.c { text-align: center; }
+    .dot-p { color: #1e3a8a; font-weight: 700; }
+    .rule-list { list-style: none; padding: 0; }
+    .rule-list li { padding: .6rem 0; border-bottom: 1px solid rgba(148,163,184,.3); color: var(--text-light); }
+    .rule-list li:last-child { border-bottom: none; }
+    .rule-list strong { color: var(--text); }
+    details.textver { margin-top: 1.25rem; }
+    details.textver summary { cursor: pointer; font-weight: 700; padding: .6rem 0; }
+    .tight-p { max-width: 75ch; margin: 0 auto 1.5rem; text-align: center; color: var(--text-light); }
+    .legend-line { text-align: center; color: var(--text-light); font-size: .95rem; margin: 0 0 1rem; }
+
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="container">
+      <a href="../../index.html" class="nav-brand"><span>DP</span> Portfolio</a>
+      <ul class="nav-links">
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../../index.html#artifacts">Artifacts</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section class="artifact-page-hero">
+      <div class="hero-grid-pattern" aria-hidden="true"></div>
+      <div class="particle-bg" aria-hidden="true"></div>
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="../../index.html">Home</a>
+          <span aria-hidden="true">/</span>
+          <a href="../../index.html#artifacts">Artifacts</a>
+          <span aria-hidden="true">/</span>
+          <span class="breadcrumb-current" aria-current="page">LLM Training and Costs</span>
+        </nav>
+        <div class="hero-tag">Artifact 3 &bull; Workshop 3.4</div>
+        <h1>How an LLM Is Trained, <span class="gradient-text">and What It Costs</span></h1>
+        <p class="artifact-hero-desc">An infographic that follows a large language model through nine training stages and prices each resource: data, compute, energy and time. Every number carries a tag that says whether it was reported, derived or estimated.</p>
+        <div class="artifact-meta">
+          <span class="meta-tag">November 2026</span>
+          <span class="meta-tag">IWU - AIML Course</span>
+          <span class="meta-tag">Infographic + Explanatory Document</span>
+        </div>
+        <div class="dl-row left hero-links">
+          <a href="LLM_Training_Costs_Infographic.png">Full-resolution PNG (3,600 px wide)</a>
+          <a href="LLM_Training_Costs_Infographic.pdf">PDF</a>
+          <a href="Pinninti_Deepthi_LLM_Training_Costs_Explanatory_Document.docx" download>Explanatory document (DOCX)</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><span class="stat-number">9</span><span class="stat-label">Training stages</span></div>
+          <div class="hero-stat"><span class="stat-number">4</span><span class="stat-label">Resource categories</span></div>
+          <div class="hero-stat"><span class="stat-number">121&times;</span><span class="stat-label">More compute, GPT-3 to Llama 3.1</span></div>
+          <div class="hero-stat"><span class="stat-number">14</span><span class="stat-label">Automatic data checks</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="comparison-section" id="infographic">
+      <div class="container">
+        <div class="section-label" style="text-align:center;display:block;">The Infographic</div>
+        <h2>How a Large Language Model Is Trained, and What It Costs</h2>
+        <div class="glass-card map-figure reveal">
+          <div class="map-scroll">
+            <img src="LLM_Training_Costs_Infographic.png" width="3600" height="12278" alt="Infographic titled How a Large Language Model Is Trained, and What It Costs. It shows nine training stages in three phases (prepare the data, train the model, test, ship and run), each tagged with the resources it uses; four panels for data, compute, energy and time with bar charts for GPT-3, Llama 2, Llama 3.1 and DeepSeek-V3; a dollar-cost chart; a model comparison table; and three takeaways. A full text version follows on this page.">
+          </div>
+          <p class="map-caption">On a small screen, scroll the picture sideways. <a href="LLM_Training_Costs_Infographic.png">Open the full-size image (3,600 &times; 12,278 px)</a>, <a href="LLM_Training_Costs_Infographic.pdf">open the PDF</a> (text stays sharp when you zoom) or <a href="Pinninti_Deepthi_LLM_Training_Costs_Explanatory_Document.docx" download>read the explanatory document</a>. The tables below repeat the graphic's data as text.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="artifact-content reveal">
+      <div class="container">
+        <div class="artifact-info-grid">
+          <div class="info-card glass-card reveal" data-delay="0"><h4>Introduction</h4><p>This is my third portfolio artifact, for Workshop 3.4. In my Salesforce work I configure AI features such as Agentforce without seeing what it took to build the models behind them. This artifact looks at that hidden side: how a large language model (LLM) is trained and what it costs in data, computing power, energy and time.</p></div>
+          <div class="info-card glass-card reveal" data-delay="50"><h4>Description</h4><p>The artifact is one tall infographic. It follows a model through nine training stages in three phases, from collecting data to running the finished model. It then shows the four resource costs with real figures for GPT-3, Llama 2, Llama 3.1, DeepSeek-V3 and the outside estimates for GPT-4 and Gemini Ultra. A comparison table shows what is known and what is not. Claude is in the table too, with its figures marked as not disclosed.</p></div>
+          <div class="info-card glass-card reveal" data-delay="100"><h4>Objective</h4><p>To show clearly how an LLM is trained, what each resource contributes to cost, and how trustworthy each number is. A reader should be able to tell a reported figure from a derived one or an outside estimate.</p></div>
+          <div class="info-card glass-card reveal" data-delay="150"><h4>Process</h4><ol style="padding-left:1.25rem;line-height:1.9;color:var(--text-light);font-size:0.95rem;"><li>Read the assigned resources, then the original papers and model cards for GPT-3, InstructGPT, Llama 2, Llama 3.1 and DeepSeek-V3.</li><li>Listed every figure with its source and labelled it Reported (R), Derived by me (D), or Third-party estimate (E). Figures that nobody has published are marked Not disclosed.</li><li>Put all inputs in one data file and calculated the derived values (energy, cost, growth ratios) by formula. 14 automatic checks recompute totals and compare them with the published numbers.</li><li>Sorted the process into nine stages in three phases, then tagged each stage with the resources that drive it.</li><li>Built the infographic in HTML and CSS, exported a 3600-pixel PNG and a PDF, and reviewed the rendered image for alignment, contrast and spelling.</li><li>Wrote this page and the explanatory document from the same data file, so the numbers match everywhere.</li></ol></div>
+          <div class="info-card glass-card reveal" data-delay="200"><h4>Tools</h4><ul style="padding-left:1.25rem;line-height:1.9;color:var(--text-light);font-size:0.95rem;"><li><strong>Python</strong> to hold the data, calculate derived values and run the checks.</li><li><strong>HTML, CSS and Playwright</strong> to build the infographic as live text and export it as PNG and PDF.</li><li><strong>Primary sources</strong> for every figure: research papers, developer model cards and Stanford&#x27;s AI Index.</li><li><strong>An AI assistant (Claude)</strong> to help write the build scripts and first drafts. I checked each figure against its source and edited the wording.</li></ul></div>
+          <div class="info-card glass-card reveal" data-delay="250"><h4>Value Proposition</h4><p>It shows that I can take a topic where the public numbers are messy, check them against the sources, and explain them for a mixed audience. Teams deciding whether to buy, fine-tune or build an AI model need someone who can say what a figure means and how much to trust it.</p></div>
+          <div class="info-card glass-card full-width reveal" data-delay="300"><h4>Unique Value</h4><p>Artifact 1 sorted algorithms and Artifact 2 explained one algorithm family hands-on. This one is about the infrastructure and economics behind generative AI. It also treats evidence quality as part of the content: every number carries a tag, and the blanks for closed models such as Claude and GPT-4 are shown instead of filled with guesses.</p></div>
+          <div class="info-card glass-card full-width reveal" data-delay="350"><h4>Relevance</h4><p>Salesforce customers ask whether to use a hosted model or train their own, and what each request costs. Understanding where training cost comes from (mostly pre-training, with a small compute share for alignment) helps me explain those trade-offs and ask better questions about energy use and vendor claims.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="comparison-section" id="comparison">
+      <div class="container">
+        <div class="section-label" style="text-align:center;display:block;">The Data</div>
+        <h2>What Is Known About Each Model</h2>
+        <p class="tight-p">Open-weight developers publish most numbers; closed developers publish few. Tags: <strong>R</strong> reported by the developer or paper, <strong>D</strong> derived by me from reported numbers, <strong>E</strong> third-party estimate. Blank cells say Not disclosed on purpose.</p>
+        <div class="algo-table-wrap glass-card reveal"><table class="algo-table"><caption class="sr-only" style="position:absolute;left:-9999px">Training figures by model</caption><thead><tr><th>Model</th><th>Developer</th><th>Parameters</th><th>Training tokens</th><th>Training compute (FLOPs)</th><th>Hardware and GPU-hours</th><th>Energy and emissions</th><th>Elapsed time</th><th>Compute cost</th></tr></thead><tbody><tr><th scope="row">GPT-3</th><td>OpenAI, 2020</td><td>175 B (R)</td><td>300 B (R)</td><td>3.1 &times; 10<sup>23</sup> (R)</td><td>10,000 V100; 3.55 M GPU-h (E)</td><td>1,287 MWh; 552 t CO<sub>2</sub>e (E)</td><td>14.8 days (E)</td><td>Not disclosed</td></tr><tr><th scope="row">GPT-4</th><td>OpenAI, 2023</td><td>Not disclosed</td><td>Not disclosed</td><td>2.1 &times; 10<sup>25</sup> (E)</td><td>Not disclosed</td><td>Not disclosed</td><td>Not disclosed</td><td>$78 M (E)</td></tr><tr><th scope="row">Claude</th><td>Anthropic</td><td>Not disclosed</td><td>Not disclosed</td><td>Not disclosed</td><td>Not disclosed</td><td>Not disclosed</td><td>Not disclosed</td><td>Not disclosed</td></tr><tr><th scope="row">Gemini Ultra</th><td>Google, 2023</td><td>Not disclosed</td><td>Not disclosed</td><td>Not disclosed</td><td>Not disclosed</td><td>Not disclosed</td><td>Not disclosed</td><td>$191 M (E)</td></tr><tr><th scope="row">Llama 2 70B</th><td>Meta, 2023</td><td>70 B (R)</td><td>2 T (R)</td><td>Not disclosed</td><td>A100; 1.72 M GPU-h (R)</td><td>688 MWh (D); 291 t CO<sub>2</sub>e (R)</td><td>Not disclosed</td><td>$3.4 M (D)</td></tr><tr><th scope="row">Llama 3.1 405B</th><td>Meta, 2024</td><td>405 B (R)</td><td>15.6 T (R)</td><td>3.8 &times; 10<sup>25</sup> (R)</td><td>16,384 H100; 30.84 M GPU-h (R)</td><td>21.6 GWh (D); 8,930 t CO<sub>2</sub>e (R)</td><td>54-day window, 466 interruptions (R)</td><td>$61.7 M (D)</td></tr><tr><th scope="row">DeepSeek-V3</th><td>DeepSeek, 2024</td><td>671 B; 37 B active (R)</td><td>14.8 T (R)</td><td>Not disclosed</td><td>2,048 H800; 2.79 M GPU-h (R)</td><td>1,952 MWh (D)</td><td>about 54 days pre-training (D)</td><td>$5.6 M (R)</td></tr></tbody></table></div>
+        <p class="map-caption" style="max-width:75ch;margin:1rem auto 0;">Derived costs multiply reported GPU-hours by $2.00 per GPU-hour (DeepSeek's own rental assumption), so the three are comparable; they cover the final training run only. Derived energy multiplies GPU-hours by the GPU watts the developer states (DeepSeek-V3: 700 W, the H100 rating, since none was published). Claude: Anthropic describes the kinds of data it uses but publishes no sizes, compute, energy or cost.</p>
+        <details class="textver glass-card" style="padding:1rem 1.5rem;">
+          <summary>Text version of the infographic panels (resources, dollars and stages)</summary>
+          <h3 style="margin-top:1rem;">Resource values</h3>
+          <div class="algo-table-wrap glass-card reveal"><table class="algo-table"><caption class="sr-only" style="position:absolute;left:-9999px">Resource values</caption><thead><tr><th>Resource</th><th>Measure</th><th>Values</th><th>Context</th></tr></thead><tbody><tr><th scope="row">Data</th><td>Training tokens</td><td>GPT-3 0.3 T; Llama 2 70B 2 T; DeepSeek-V3 14.8 T; Llama 3.1 405B 15.6 T</td><td>GPT-3 kept 1.3% of its 45 TB crawl (570 GB)</td></tr><tr><th scope="row">Compute</th><td>Training FLOPs</td><td>GPT-3 3.1 &times; 10<sup>23</sup>; GPT-4 2.1 &times; 10<sup>25</sup> (estimate); Llama 3.1 405B 3.8 &times; 10<sup>25</sup></td><td>About 121 times more compute from GPT-3 to Llama 3.1 405B</td></tr><tr><th scope="row">Energy</th><td>Training MWh</td><td>Llama 2 70B 688 (D); GPT-3 1,287 (E); DeepSeek-V3 1,952 (D); Llama 3.1 405B 21,588 (D)</td><td>Llama 3.1 405B is about 2,000 US homes for a year (at 10.8 MWh each)</td></tr><tr><th scope="row">Time</th><td>GPU-hours</td><td>Llama 2 70B 1.72 M; DeepSeek-V3 2.79 M; GPT-3 3.55 M (E); Llama 3.1 405B 30.84 M</td><td>GPT-3 about 14.8 days on 10,000 GPUs (E); DeepSeek-V3 about 54 days on 2,048</td></tr></tbody></table></div>
+          <h3 style="margin-top:1.5rem;">Compute cost of the final training run</h3>
+          <div class="algo-table-wrap glass-card reveal"><table class="algo-table"><caption class="sr-only" style="position:absolute;left:-9999px">Compute cost by model</caption><thead><tr><th>Model</th><th>How the figure is obtained</th><th>Compute cost</th><th>Evidence</th></tr></thead><tbody><tr><th scope="row">Llama 2 70B</th><td>1,720,320 GPU-hours &times; $2.00</td><td>$3.4 M</td><td>Derived</td></tr><tr><th scope="row">DeepSeek-V3</th><td>2,788,000 GPU-hours &times; $2.00</td><td>$5.6 M</td><td>Reported</td></tr><tr><th scope="row">Llama 3.1 405B</th><td>30,840,000 GPU-hours &times; $2.00</td><td>$61.7 M</td><td>Derived</td></tr><tr><th scope="row">GPT-4</th><td>Stanford AI Index 2024 estimate of compute</td><td>$78 M</td><td>Estimate</td></tr><tr><th scope="row">Gemini Ultra</th><td>Stanford AI Index 2024 estimate of compute</td><td>$191 M</td><td>Estimate</td></tr></tbody></table></div>
+          <p class="map-caption">Alignment share: fine-tuning and RLHF for a 175B InstructGPT took 64.9 petaflop/s-days against 3,640 for GPT-3 pre-training, or 1.8% of the combined compute (Ouyang et al., 2022). DeepSeek-V3 spent 0.18% of its GPU-hours on post-training.</p>
+          <h3 style="margin-top:1.5rem;">The nine stages</h3>
+          <ol style="padding-left:1.25rem;line-height:1.9;color:var(--text-light);font-size:0.95rem;"><li><strong>Stage 1: Collect data.</strong> Gather text, code and books from the web, licensed sources and human writers. GPT-3 started from 45 TB of compressed Common Crawl text. Main resources: Data.</li><li><strong>Stage 2: Clean and filter.</strong> Remove duplicates, spam and low-quality or unsafe text so the model learns from good examples. GPT-3 kept about 1.3% of that crawl (570 GB). Main resources: Data; supporting: Compute.</li><li><strong>Stage 3: Tokenize.</strong> Cut text into tokens (word pieces) and turn them into numbers the network can process. GPT-3 trained on 300 billion tokens; Llama 3.1 405B on 15.6 trillion. Main resources: Data.</li><li><strong>Stage 4: Design and set up.</strong> Choose the Transformer size and the token budget, then build and test the GPU cluster. Llama 3.1 405B: 126 layers, up to 16,384 H100 GPUs. Main resources: Compute; supporting: Time.</li><li><strong>Stage 5: Pre-train.</strong> Predict the next token billions of times. This is the longest and most expensive stage. Llama 3.1 405B used 30.84 million H100 GPU-hours. Main resources: Compute, Energy, Time.</li><li><strong>Stage 6: Supervised fine-tuning.</strong> Teach the model to follow instructions using human-written example answers. InstructGPT SFT used 4.9 petaflop/s-days vs 3,640 for GPT-3 pre-training. Main resources: Data; supporting: Compute.</li><li><strong>Stage 7: Align with human feedback.</strong> People rank answers; a reward model then steers the model toward preferred behavior (RLHF). A 1.3B InstructGPT was preferred to the 175B GPT-3. Main resources: Data; supporting: Compute.</li><li><strong>Stage 8: Evaluate and red-team.</strong> Run benchmarks and adversarial safety tests, then fix problems before release. Teams repeat this with stages 6 and 7 until quality and safety targets are met. Main resources: Time; supporting: Data.</li><li><strong>Stage 9: Deploy and monitor.</strong> Serve the model to users and watch quality, cost and misuse. The cost repeats with every request. Unlike training, this cost never ends while the model is in use. Main resources: Compute, Energy.</li></ol>
+        </details>
+      </div>
+    </section>
+
+    <section class="comparison-section" id="classification">
+      <div class="container">
+        <div class="section-label" style="text-align:center;display:block;">Classification</div>
+        <h2>How I Sorted the Content</h2>
+        <p class="tight-p">I classified the content three ways: by pipeline stage (three phases), by resource (four categories) and by evidence quality (four labels). The matrix shows the stage and resource sort; solid dots are main drivers and open dots are supporting resources.</p>
+        <div class="algo-table-wrap glass-card reveal"><table class="algo-table"><caption class="sr-only" style="position:absolute;left:-9999px">Stage by resource matrix</caption><thead><tr><th>Stage</th><th class=c>Data</th><th class=c>Compute</th><th class=c>Energy</th><th class=c>Time</th><th>Why it is tagged this way</th></tr></thead><tbody><tr><th scope="row">1. Collect data</th><td class=c><span class="dot-p" aria-label="main driver">&#9679;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td>Volume and licensing of data decide the cost; little computing is involved.</td></tr><tr><th scope="row">2. Clean and filter</th><td class=c><span class="dot-p" aria-label="main driver">&#9679;</span></td><td class=c><span aria-label="supporting">&#9675;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td>Filtering removes most of the raw data, so data quality is the point. Deduplication needs some computing.</td></tr><tr><th scope="row">3. Tokenize</th><td class=c><span class="dot-p" aria-label="main driver">&#9679;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td>Converting text to tokens is a data format step with small compute needs.</td></tr><tr><th scope="row">4. Design and set up</th><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="dot-p" aria-label="main driver">&#9679;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span aria-label="supporting">&#9675;</span></td><td>The choice of model size and the GPU cluster fix how much compute the run can use. Building and testing the cluster takes time.</td></tr><tr><th scope="row">5. Pre-train</th><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="dot-p" aria-label="main driver">&#9679;</span></td><td class=c><span class="dot-p" aria-label="main driver">&#9679;</span></td><td class=c><span class="dot-p" aria-label="main driver">&#9679;</span></td><td>The only stage that depends on three resources at once: weeks of thousands of GPUs, drawing power the whole time.</td></tr><tr><th scope="row">6. Supervised fine-tuning</th><td class=c><span class="dot-p" aria-label="main driver">&#9679;</span></td><td class=c><span aria-label="supporting">&#9675;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td>The limit is getting good human-written examples, not computing power.</td></tr><tr><th scope="row">7. Align with human feedback</th><td class=c><span class="dot-p" aria-label="main driver">&#9679;</span></td><td class=c><span aria-label="supporting">&#9675;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td>The limit is collecting human rankings. Compute is small compared with pre-training.</td></tr><tr><th scope="row">8. Evaluate and red-team</th><td class=c><span aria-label="supporting">&#9675;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="dot-p" aria-label="main driver">&#9679;</span></td><td>Testing and red-teaming are limited by people&#x27;s time and by repeated rounds with stages 6 and 7.</td></tr><tr><th scope="row">9. Deploy and monitor</th><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="dot-p" aria-label="main driver">&#9679;</span></td><td class=c><span class="dot-p" aria-label="main driver">&#9679;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td>Serving costs compute and energy again with every request, for as long as the model is in use.</td></tr></tbody></table></div>
+        <p class="map-caption" style="max-width:75ch;margin:1rem auto 2rem;">Main drivers: Data leads 5 stages, Compute 3, Energy 2 and Time 2. Stage 5 is the only one that depends on three resources at once.</p>
+        <div class="artifact-info-grid">
+          <div class="info-card glass-card reveal" data-delay="0"><h4>Sorting Rules</h4><ul class="rule-list"><li><strong>Phase rule.</strong> Stages are grouped by what they produce: a clean dataset (Phase A), a trained and aligned model (Phase B), or a running service (Phase C).</li><li><strong>Primary tag.</strong> A stage gets a primary resource tag when reducing that resource would shorten the stage or cut its cost the most.</li><li><strong>Supporting tag.</strong> A stage gets a supporting tag when the resource is needed but is not the limit.</li><li><strong>Evidence rule.</strong> Every number is sorted by who produced it: the developer (R), me from reported inputs (D), or an outside estimator (E). If nobody has published it, it is marked Not disclosed.</li></ul></div>
+          <div class="info-card glass-card reveal" data-delay="50"><h4>Decisions and Trade-offs</h4><ul class="rule-list"><li><strong>Nine stages instead of five.</strong> Five stages (data, train, tune, test, deploy) hide the biggest finding. Splitting pre-training from fine-tuning and human feedback shows that stage 5 took about 98% of the compute in OpenAI&#x27;s InstructGPT study while the alignment stages took 1.8%.</li><li><strong>Four resource categories, not five.</strong> The assignment names data, compute, energy and time. I tested adding People and Money. People&#x27;s work (writing examples, ranking answers) is a cost of creating data, so it sits under Data. Money is not a separate resource but the common unit that combines the other four, so it gets its own section in dollars.</li><li><strong>GPU-hours under Time, FLOPs under Compute.</strong> FLOPs measure the work a model needs. GPU-hours measure how long hardware is busy doing it, which depends on the chip. Two models with equal FLOPs can have different GPU-hours, so GPU-hours are the bridge to time, energy and cost.</li><li><strong>Fine-tuning and RLHF tagged Data first.</strong> Their compute is small (1.8% of the total in the InstructGPT study). What limits them is collecting human-written and human-ranked examples, so Data is the main driver and Compute is supporting.</li><li><strong>Deployment included.</strong> The assignment asks for the process through deployment. It also shows a cost that training figures leave out: serving the model repeats with every request.</li><li><strong>A second classification for evidence.</strong> Sorting each number as Reported, Derived, Estimate or Not disclosed lets readers compare models without treating an outside guess like a developer&#x27;s own figure.</li></ul></div>
+          <div class="info-card glass-card full-width reveal" data-delay="100"><h4>Corrections I Made While Building It</h4><ul style="padding-left:1.25rem;line-height:1.9;color:var(--text-light);font-size:0.95rem;"><li>I first tagged GPT-3&#x27;s energy, elapsed time and GPU count as reported. Reading Patterson et al. (2021) showed they are the researchers&#x27; estimates built from an NVIDIA press release and performance data from OpenAI, so I changed them to Estimate and striped the bars.</li><li>Llama 3.1&#x27;s GPU-hours and emissions are in Meta&#x27;s model card, not in the Llama 3 paper. I cite both for what each one contains.</li><li>I could not confirm earlier-year training costs from the AI Index (such as the original Transformer) in the sources I could read, so I left them out instead of quoting them from memory.</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="artifact-content reveal" id="reflection">
+      <div class="container">
+        <div class="section-label" style="text-align:center;display:block;">Reflection</div>
+        <h2>Artifact Reflection</h2>
+        <div class="info-card glass-card full-width reveal" style="margin-bottom:1.5rem;">
+          <h4>Lessons Learned</h4>
+          <p><strong>What changed in my thinking.</strong> I started with the idea that training an LLM is mostly a very large pile of GPUs. The sources showed a more varied picture. Data work matters just as much: GPT-3&#x27;s team kept about 1.3% of the web crawl it started with. Human feedback uses under 2% of the compute, yet people preferred the 1.3-billion-parameter InstructGPT to the 175-billion-parameter GPT-3. The result that surprised me most was how little compute the step that makes a model useful actually needs.</p><p><strong>The hardest part.</strong> Comparable numbers are hard to find. Meta and DeepSeek publish GPU-hours; OpenAI, Anthropic and Google publish almost nothing about their newest models. I had to decide what to do with the gaps. Filling them with rumors would make the graphic look complete and be wrong, so I show Not disclosed and use evidence tags. I also caught my own mistake: I had labelled GPT-3&#x27;s energy figure as reported when it is an outside estimate. Fixing it made the graphic less tidy and more honest.</p><p><strong>Strategies that worked.</strong> I put every input in one data file, calculated each derived value by formula, and ran 14 checks. One check compares emissions per megawatt-hour for Meta&#x27;s two models: 0.42 for Llama 2 70B and 0.41 for Llama 3.1 405B. They agree closely, which suggests my GPU-hours-times-watts method matches how Meta counted. Because the graphic, page and document all read that file, a number cannot differ between them.</p><p><strong>Connections to the course and beyond.</strong> Workshop 3.2 covered GPT-3&#x27;s training data, which became stages 1 and 2 here. In Workshop 2.4 I counted 137 weights in a small network and watched a loss value fall; pre-training is the same loop with 405 billion parameters and 30.84 million GPU-hours. In Workshop 1.4 I trained a Decision Tree on a small dataset, a task that needs no special hardware. At work, these numbers help me explain why per-request cost and vendor transparency matter when choosing an AI service. Next I want to study the cost of running a model, which these training figures leave out.</p>
+        </div>
+        <div class="artifact-info-grid">
+          <div class="info-card glass-card reveal" data-delay="100"><h4>Audience Customization</h4><p>The graphic is written for classmates, instructors and business stakeholders who use AI tools but have not trained a model. Each stage has a plain-language description and one concrete example. Terms such as token, FLOP and GPU-hour are defined where they first matter. Colour is never the only signal: tags carry the resource name and an icon, and estimates are striped as well as outlined.</p></div>
+          <div class="info-card glass-card reveal" data-delay="200"><h4>Limitations</h4><ul style="padding-left:1.25rem;line-height:1.9;color:var(--text-light);font-size:0.95rem;"><li>Costs are compute-rental estimates for the final run only. Salaries, research, failed runs, data licensing, hardware purchase and serving are excluded.</li><li>Energy marked D multiplies reported GPU-hours by the GPU power the developer states. DeepSeek-V3 assumes 700 watts, the H100 rating, because DeepSeek did not publish a figure. Cooling and facility overhead are not added.</li><li>Models ran on different chips and years, so only orders of magnitude should be compared.</li><li>Claude, GPT-4 and Gemini Ultra are shown mostly as Not disclosed or outside estimates because the developers have not published training details.</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="comparison-section" id="feedback">
+      <div class="container">
+        <div class="section-label" style="text-align:center;display:block;">Feedback and Revisions</div>
+        <h2>Lessons From My Earlier Workshops</h2>
+        <p class="tight-p">Reviewers of my earlier artifacts asked for a way to see the finished design, for consistent figures, and for numbers recalculated from the source. Here is how this artifact responds.</p>
+        <div class="algo-table-wrap glass-card reveal"><table class="algo-table"><thead><tr><th>Feedback I received</th><th>What I changed in this artifact</th></tr></thead><tbody><tr><th scope="row">I could not see the finished infographic, only its text (Workshop 1.5 review).</th><td>This page shows the infographic at full width and links straight to a 3600-pixel PNG and a PDF. The graphic&#x27;s text is real text, with alt text and a complete HTML version of every chart and table below it.</td></tr><tr><th scope="row">Dataset size figures should be consistent across text and tables (Workshop 1.4 review).</th><td>Every number comes from one data file. The graphic, this page and the explanatory document are generated from it, so a figure cannot differ between them.</td></tr><tr><th scope="row">Recalculate metrics directly from the source numbers (Workshop 1.4 review).</th><td>Energy, cost, time and growth ratios are calculated from reported inputs, and 14 checks recompute totals. For example, DeepSeek-V3&#x27;s three GPU-hour stages add up to 2.788 million and its cost equals GPU-hours times $2.</td></tr><tr><th scope="row">Descriptions should match the actual gap (Workshop 1.4 review).</th><td>Text uses the computed gap, such as 121 times more compute or about 18 times the cost, and warns that small gaps are noise because the models ran on different GPUs.</td></tr></tbody></table></div>
+        <div class="dl-row"><a href="data/verification.txt">View the 14 data checks</a><a href="data/data.json">View the data file (JSON)</a></div>
+      </div>
+    </section>
+
+    <section class="artifact-content references-section reveal">
+      <div class="container">
+        <div class="info-card glass-card full-width references-card">
+          <h4>References</h4>
+          <ul><li>Brown, T. B., Mann, B., Ryder, N., Subbiah, M., et al. (2020). Language models are few-shot learners. arXiv. https://arxiv.org/abs/2005.14165</li><li>DeepSeek-AI. (2024). DeepSeek-V3 technical report. arXiv. https://arxiv.org/abs/2412.19437</li><li>Epoch AI. (n.d.). Notable AI models [Data set]. https://epoch.ai/data</li><li>Hoffmann, J., Borgeaud, S., Mensch, A., et al. (2022). Training compute-optimal large language models. arXiv. https://arxiv.org/abs/2203.15556</li><li>Llama Team, Meta. (2024). The Llama 3 herd of models. arXiv. https://arxiv.org/abs/2407.21783</li><li>Maslej, N., Fattorini, L., Perrault, R., et al. (2024). The AI Index 2024 annual report. Stanford Institute for Human-Centered AI. https://hai.stanford.edu/ai-index</li><li>Meta. (2023). Llama 2 model card. https://github.com/meta-llama/llama/blob/main/MODEL_CARD.md</li><li>Meta. (2024). Llama 3.1 model card. https://github.com/meta-llama/llama-models/blob/main/models/llama3_1/MODEL_CARD.md</li><li>OpenAI. (2023). GPT-4 technical report. arXiv. https://arxiv.org/abs/2303.08774</li><li>Ouyang, L., Wu, J., Jiang, X., et al. (2022). Training language models to follow instructions with human feedback. arXiv. https://arxiv.org/abs/2203.02155</li><li>Patterson, D., Gonzalez, J., Le, Q., et al. (2021). Carbon emissions and large neural network training. arXiv. https://arxiv.org/abs/2104.10350</li><li>U.S. Energy Information Administration. (2023). Average annual electricity use of a U.S. residential customer (about 10.8 MWh in 2022). https://www.eia.gov/tools/faqs/faq.php?id=97</li></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Deepthi Pinninti &bull; AIML Portfolio &copy; 2026</p>
+      <p class="footer-sub"><a href="../../index.html">&#8592; Back to Portfolio</a> | Built with GitHub Pages | Indiana Wesleyan University</p>
+    </div>
+  </footer>
+
+  <script>
+    (function initParticles() {
+      var bg = document.querySelector('.particle-bg');
+      if (!bg) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var colors = ['rgba(37, 99, 235, 0.25)','rgba(124, 58, 237, 0.2)','rgba(37, 99, 235, 0.15)','rgba(124, 58, 237, 0.12)','rgba(59, 130, 246, 0.18)'];
+      for (var i = 0; i < 30; i++) {
+        var p = document.createElement('div'); p.classList.add('particle');
+        var s = Math.random() * 4 + 2;
+        p.style.width = s + 'px'; p.style.height = s + 'px'; p.style.left = Math.random() * 100 + '%';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.animationDuration = (Math.random() * 15 + 10) + 's'; p.style.animationDelay = (Math.random() * 10) + 's';
+        bg.appendChild(p);
+      }
+    })();
+  </script>
+  <script src="../../js/main.js" defer></script>
+</body>
+</html>
