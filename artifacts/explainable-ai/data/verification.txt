@@ -1,0 +1,41 @@
+PASS C1 sources exist
+PASS C2 sources exist
+PASS C3 sources exist
+PASS C4 sources exist
+PASS C5 sources exist
+PASS C6 sources exist
+PASS T1 sources exist
+PASS T2 sources exist
+PASS T3 sources exist
+PASS T4 sources exist
+PASS T5 sources exist
+PASS T6 sources exist
+PASS T7 sources exist
+PASS T8 sources exist
+PASS Anthropic 2024 sources exist
+PASS Anthropic 2025 sources exist
+PASS Anthropic 2025 sources exist
+PASS OpenAI 2023 sources exist
+PASS OpenAI 2024 sources exist
+PASS OpenAI 2025 sources exist
+PASS Google DeepMind 2018 sources exist
+PASS Google DeepMind 2019 sources exist
+PASS Google DeepMind 2024 sources exist
+PASS Meta 2020 sources exist
+PASS Meta 2023 sources exist
+PASS Meta Ongoing sources exist
+PASS every challenge appears in the matrix
+PASS matrix points only to defined techniques
+PASS every challenge has a main technique
+PASS every technique answers at least one challenge
+PASS challenge families all used
+PASS technique families all used
+PASS no unused sources apart from method/context references
+PASS experiment uses the same 114-patient test set as report 4.1 (42 malignant)
+PASS baseline recall 39/42 matches report 4.1 for both models
+PASS LR: removing top-5 features hurts more than removing 5 random ones
+PASS RF: removing top-5 features hurts more than removing 5 random ones
+PASS top-k lists have k entries
+PASS overlap recomputed from the two top-5 lists
+PASS twelve lab efforts listed (3 per organisation)
+40 checks passed

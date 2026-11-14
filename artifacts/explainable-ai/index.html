@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explainable AI for LLMs | Deepthi Pinninti Portfolio</title>
+  <meta name="description" content="An infographic on explaining large language models: six challenges, eight techniques, what OpenAI, Anthropic, Google DeepMind and Meta are doing, and how validation and metrics turn an explanation into evidence, with a small experiment of my own.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    /* ===== Enhanced Hero ===== */
+    .artifact-page-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 10rem 0 5rem;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #0f172a 100%);
+      color: #f1f5f9;
+    }
+
+    .artifact-page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 20% 50%, rgba(37, 99, 235, 0.15) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 350px at 80% 30%, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .artifact-page-hero .container {
+      position: relative;
+      z-index: 2;
+    }
+
+    .artifact-page-hero h1 {
+      color: #f1f5f9;
+      font-size: 3.25rem;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .artifact-page-hero .breadcrumb a {
+      color: #94a3b8;
+    }
+
+    .artifact-page-hero .breadcrumb a:hover {
+      color: #e2e8f0;
+    }
+
+    .artifact-page-hero .breadcrumb span {
+      color: #64748b;
+    }
+
+    .artifact-page-hero .breadcrumb .breadcrumb-current {
+      color: #93c5fd;
+    }
+
+    .artifact-page-hero .hero-tag {
+      background: rgba(124, 58, 237, 0.2);
+      border: 1px solid rgba(124, 58, 237, 0.35);
+      color: #c4b5fd;
+    }
+
+    .artifact-page-hero .artifact-hero-desc {
+      color: #94a3b8;
+      font-size: 1.2rem;
+      line-height: 1.8;
+    }
+
+    .artifact-page-hero .meta-tag {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+    }
+
+    /* ===== Particle Background ===== */
+    .particle-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .particle-bg .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: particleRise linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes particleRise {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% {
+        transform: translateY(-20vh) scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* ===== Hero Grid Pattern ===== */
+    .hero-grid-pattern {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(124, 58, 237, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 80%);
+    }
+
+    /* ===== Hero Stats Bar ===== */
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-stat {
+      text-align: left;
+    }
+
+    .hero-stat .stat-number {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .hero-stat .stat-label {
+      font-size: 0.8rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+    }
+
+    /* ===== Glass Card ===== */
+    .glass-card {
+      background: rgba(248, 250, 252, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card:hover {
+      background: rgba(248, 250, 252, 0.85);
+      border-color: rgba(37, 99, 235, 0.25);
+      box-shadow:
+        0 8px 32px rgba(37, 99, 235, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      transform: translateY(-4px);
+    }
+
+    /* ===== Tilt Card ===== */
+    .tilt-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .tilt-card:hover {
+      box-shadow:
+        0 20px 40px rgba(37, 99, 235, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    /* ===== Info Card Enhancements ===== */
+    .info-card.glass-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-card.glass-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .info-card.glass-card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .info-card.glass-card h4 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-card.glass-card h4::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 1em;
+      background: var(--gradient);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ===== Enhanced Artifact Content ===== */
+    .artifact-content {
+      position: relative;
+    }
+
+    .artifact-content::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ===== Comparison Section ===== */
+    .comparison-section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .comparison-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Intro cards: ML vs DL */
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    .intro-card {
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+
+    .intro-card.ml-card::before {
+      background: linear-gradient(90deg, #2563eb, #3b82f6);
+    }
+
+    .intro-card.dl-card::before {
+      background: linear-gradient(90deg, #7c3aed, #a78bfa);
+    }
+
+    .intro-card h3 {
+      font-size: 1.35rem;
+      margin-bottom: 1rem;
+    }
+
+    .intro-card .accent-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .ml-card .accent-label {
+      background: rgba(37, 99, 235, 0.1);
+      color: #2563eb;
+    }
+
+    .dl-card .accent-label {
+      background: rgba(124, 58, 237, 0.1);
+      color: #7c3aed;
+    }
+
+    .intro-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .intro-card ul li {
+      padding: 0.35rem 0;
+      padding-left: 1.25rem;
+      position: relative;
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+
+    .intro-card ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .ml-card ul li::before {
+      background: #2563eb;
+    }
+
+    .dl-card ul li::before {
+      background: #7c3aed;
+    }
+
+    /* ===== Case Study Cards ===== */
+    .case-study {
+      margin-top: 4rem;
+    }
+
+    .case-study-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .case-study-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .case-study.ml-case .case-study-number {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+    }
+
+    .case-study.dl-case .case-study-number {
+      background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    }
+
+    .case-study-header h3 {
+      font-size: 1.5rem;
+    }
+
+    .case-study-header .case-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+    }
+
+    .case-study.ml-case .case-label {
+      color: #2563eb;
+    }
+
+    .case-study.dl-case .case-label {
+      color: #7c3aed;
+    }
+
+    .case-study-body {
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+    }
+
+    .case-study-body > p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+    }
+
+    .suitability-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .suit-card {
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .suit-card h4 {
+      font-size: 1.05rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .suit-card h4 .icon {
+      font-size: 1.1rem;
+    }
+
+    .suit-card.suits h4 .icon {
+      color: var(--success);
+    }
+
+    .suit-card.doesnt h4 .icon {
+      color: #ef4444;
+    }
+
+    .suit-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .suit-card ul li {
+      padding: 0.3rem 0;
+      padding-left: 1rem;
+      position: relative;
+      color: var(--text-light);
+      font-size: 0.93rem;
+      line-height: 1.6;
+    }
+
+    .suit-card.suits ul li::before {
+      content: '+';
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .suit-card.doesnt ul li::before {
+      content: '\2013';
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+      color: #ef4444;
+    }
+
+    /* ===== Key Differences Section ===== */
+    .differences-section {
+      position: relative;
+    }
+
+    .diff-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .diff-card {
+      padding: 1.75rem;
+      border-radius: var(--radius-lg);
+    }
+
+    .diff-card h4 {
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+    }
+
+    .diff-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .diff-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      min-width: 32px;
+      padding-top: 0.15rem;
+    }
+
+    .diff-label.ml {
+      color: #2563eb;
+    }
+
+    .diff-label.dl {
+      color: #7c3aed;
+    }
+
+    .diff-value {
+      font-size: 0.93rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* ===== Conclusion ===== */
+    .conclusion-card {
+      padding: 2.5rem;
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+      margin-top: 2.5rem;
+    }
+
+    .conclusion-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient);
+    }
+
+    .conclusion-card h3 {
+      margin-bottom: 1rem;
+    }
+
+    .conclusion-card p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-light);
+    }
+
+    /* ===== References ===== */
+    .references-section .info-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .references-section .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient);
+    }
+
+    .references-section .info-card ul li {
+      padding: 0.4rem 0;
+      transition: all 0.2s ease;
+    }
+
+    .references-section .info-card ul li:hover {
+      padding-left: 0.5rem;
+      color: var(--text);
+    }
+
+    /* ===== Enhanced Footer ===== */
+    .footer {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--gradient);
+    }
+
+    /* ===== Reduced Motion ===== */
+    @media (prefers-reduced-motion: reduce) {
+      .particle-bg .particle {
+        animation: none;
+        display: none;
+      }
+
+      .tilt-card:hover,
+      .glass-card:hover {
+        transform: none;
+      }
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .artifact-page-hero {
+        padding: 8rem 0 3rem;
+      }
+
+      .artifact-page-hero h1 {
+        font-size: 2.25rem;
+      }
+
+      .hero-stats {
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .hero-stat .stat-number {
+        font-size: 1.5rem;
+      }
+
+      .intro-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .suitability-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .diff-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+    /* ===== Artifact 1: infographic and algorithm table ===== */
+    .map-figure { padding: 1rem; }
+    .map-scroll { overflow-x: auto; border-radius: 12px; }
+    .map-scroll img { display: block; width: 100%; min-width: 900px; height: auto; border-radius: 10px; background: #f4f7fb; }
+    .map-caption { margin-top: 0.75rem; font-size: 0.9rem; color: var(--text-light); }
+    .map-caption a { color: var(--primary, #2563eb); font-weight: 600; }
+    .algo-table-wrap { overflow-x: auto; margin-top: 1.5rem; border-radius: 12px; }
+    .algo-table { width: 100%; min-width: 820px; border-collapse: collapse; font-size: 0.92rem; background: rgba(255,255,255,0.7); }
+    .algo-table th, .algo-table td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid rgba(148,163,184,0.35); vertical-align: top; color: var(--text-light); }
+    .algo-table thead th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; background: rgba(37,99,235,0.08); color: #1e293b; }
+    .algo-table tbody th { color: #0f172a; font-weight: 600; }
+    .learn-badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+    .learn-sup { background: #0f172a; color: #fff; }
+    .learn-self { background: #dde4f0; color: #0f172a; border: 1.5px solid #0f172a; }
+    .learn-uns { background: #fff; color: #5b45a8; border: 1.5px solid #5b45a8; }
+
+    /* ===== Deep dives ===== */
+    .deep-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .deep-card { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.75rem; padding: 1.75rem; align-items: start; }
+    .deep-card:nth-child(even) .deep-fig { order: -1; }
+    .deep-badges { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin-bottom: 0.5rem; }
+    .deep-domain { font-size: 0.82rem; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; }
+    .deep-text h3 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+    .deep-text h4 { margin: 1rem 0 0.4rem; font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; color: #2563eb; }
+    .deep-intro { font-size: 1.02rem; color: #0f172a; }
+    .deep-text ol { padding-left: 1.25rem; line-height: 1.7; color: var(--text-light); font-size: 0.95rem; }
+    .deep-text ol li { margin-bottom: 0.35rem; }
+    .deep-text p { margin: 0.7rem 0 0; color: var(--text-light); font-size: 0.95rem; line-height: 1.7; }
+    .deep-note { border-left: 3px solid #cbd5e1; padding-left: 0.8rem; }
+    .deep-fig { margin: 0; position: sticky; top: 90px; }
+    .deep-fig img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid rgba(148,163,184,0.4); background: #fff; }
+    @media (max-width: 860px) { .deep-card { grid-template-columns: 1fr; } .deep-card:nth-child(even) .deep-fig { order: 0; } .deep-fig { position: static; } }
+  
+    /* ===== Slide viewer ===== */
+    .viewer{max-width:1000px;margin:0 auto}
+    .viewer-stage{position:relative;border-radius:14px;overflow:hidden;box-shadow:0 10px 40px rgba(15,23,42,.18);background:#f8fafc;aspect-ratio:16/9}
+    .viewer-stage img{display:block;width:100%;height:100%;object-fit:contain}
+    .viewer-stage img[hidden]{display:none}
+    .viewer-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:1rem 0}
+    .viewer-btn{border:0;background:#2563eb;color:#fff;font:600 .95rem Inter,sans-serif;padding:.6rem 1.2rem;border-radius:10px;cursor:pointer}
+    .viewer-btn:disabled{opacity:.4;cursor:default}
+    .viewer-count{font-weight:600;color:var(--text-light)}
+    .thumbs{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem}
+    .thumbs button{padding:0;border:2px solid transparent;border-radius:8px;overflow:hidden;cursor:pointer;background:none}
+    .thumbs button[aria-current="true"]{border-color:#2563eb}
+    .thumbs img{display:block;width:100%;height:auto}
+    .dl-row{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-top:1.25rem}
+    .dl-row a{padding:.6rem 1.2rem;border-radius:10px;border:2px solid #2563eb;color:#2563eb;font-weight:600;text-decoration:none}
+    .dl-row a:hover{background:#2563eb;color:#fff}
+    @media(max-width:700px){.thumbs{grid-template-columns:repeat(4,1fr)}.viewer-btn{padding:.5rem .8rem}}
+  
+    .map-figure { padding: 1rem; }
+    .map-scroll { overflow-x: auto; border-radius: 12px; }
+    .map-scroll img { display: block; width: 100%; min-width: 900px; height: auto; border-radius: 10px; background: #f4f7fb; }
+    .map-caption { margin-top: 0.75rem; font-size: 0.95rem; color: var(--text-light); }
+    .map-caption a { color: #2563eb; font-weight: 600; }
+    .dl-row.left { justify-content: flex-start; margin-top: 1.5rem; }
+    .dl-row.hero-links { margin-top: 1.75rem; }
+    .dl-row.hero-links a { border-color: rgba(147,197,253,.7); color: #bfdbfe; }
+    .dl-row.hero-links a:hover { background: #2563eb; color: #fff; }
+    .algo-table td.c, .algo-table th.c { text-align: center; }
+    .dot-p { color: #1e3a8a; font-weight: 700; }
+    .rule-list { list-style: none; padding: 0; }
+    .rule-list li { padding: .6rem 0; border-bottom: 1px solid rgba(148,163,184,.3); color: var(--text-light); }
+    .rule-list li:last-child { border-bottom: none; }
+    .rule-list strong { color: var(--text); }
+    details.textver { margin-top: 1.25rem; }
+    details.textver summary { cursor: pointer; font-weight: 700; padding: .6rem 0; }
+    .tight-p { max-width: 75ch; margin: 0 auto 1.5rem; text-align: center; color: var(--text-light); }
+    .legend-line { text-align: center; color: var(--text-light); font-size: .95rem; margin: 0 0 1rem; }
+
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <nav class="navbar" aria-label="Main navigation"><div class="container">
+    <a href="../../index.html" class="nav-brand"><span>DP</span> Portfolio</a>
+    <ul class="nav-links"><li><a href="../../index.html">Home</a></li><li><a href="../../index.html#artifacts">Artifacts</a></li></ul>
+  </div></nav>
+
+  <main id="main">
+    <section class="artifact-page-hero">
+      <div class="hero-grid-pattern" aria-hidden="true"></div><div class="particle-bg" aria-hidden="true"></div>
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../../index.html">Home</a><span aria-hidden="true">/</span><a href="../../index.html#artifacts">Artifacts</a><span aria-hidden="true">/</span><span class="breadcrumb-current" aria-current="page">Explainable AI</span></nav>
+        <div class="hero-tag">Artifact 4 &bull; Workshop 4.4</div>
+        <h1>Opening the Black Box: <span class="gradient-text">Explaining and Trusting LLMs</span></h1>
+        <p class="artifact-hero-desc">An infographic that sorts the challenges of explaining large language models into three families, maps the techniques that answer them, shows what the leading labs are doing, and explains how validation and metrics turn an explanation into evidence.</p>
+        <div class="artifact-meta"><span class="meta-tag">November 2026</span><span class="meta-tag">IWU - AIML Course</span><span class="meta-tag">Infographic + Explanatory Document</span></div>
+        <div class="dl-row left hero-links"><a href="XAI_Infographic.png">Full-resolution PNG (3,600 px wide)</a><a href="XAI_Infographic.pdf">PDF</a><a href="Pinninti_Deepthi_Explainable_AI_Explanatory_Document.docx" download>Explanatory document (DOCX)</a></div>
+        <div class="hero-stats">
+          <div class="hero-stat"><span class="stat-number">6</span><span class="stat-label">Challenges, 3 families</span></div>
+          <div class="hero-stat"><span class="stat-number">8</span><span class="stat-label">Techniques, 3 families</span></div>
+          <div class="hero-stat"><span class="stat-number">29</span><span class="stat-label">Cited sources</span></div>
+          <div class="hero-stat"><span class="stat-number">40</span><span class="stat-label">Automatic data checks</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="comparison-section" id="infographic"><div class="container">
+      <div class="section-label" style="text-align:center;display:block;">The Infographic</div>
+      <h2>Opening the Black Box: How We Explain and Trust Large Language Models</h2>
+      <div class="glass-card map-figure reveal"><div class="map-scroll"><img src="XAI_Infographic.png" width="3600" height="15266" alt="Infographic titled Opening the Black Box. Section 1 explains explainable AI with a prompt, billions of parameters and an answer, and lists who needs explanations. Section 2 sorts six challenges into three families: the model is opaque, explanations can mislead, and data and access limit checking. Section 3 sorts eight techniques into three families by access (from the outside, from the inside, around the model), shows a matrix of which technique answers which challenge, and summarises work by Anthropic, OpenAI, Google DeepMind and Meta. Section 4 gives four validation questions and a deletion experiment with bar charts. Section 5 gives takeaways and a four-question checklist, followed by 29 sources. A full text version follows on this page."></div>
+        <p class="map-caption">On a small screen, scroll the picture sideways. <a href="XAI_Infographic.png">Open the full-size image (3,600 &times; 15,266 px)</a>, <a href="XAI_Infographic.pdf">open the PDF</a> (text stays sharp when you zoom) or <a href="Pinninti_Deepthi_Explainable_AI_Explanatory_Document.docx" download>read the explanatory document</a>. The tables below repeat the graphic's content as text.</p></div>
+    </div></section>
+
+    <section class="artifact-content reveal"><div class="container"><div class="artifact-info-grid">
+      <div class="info-card glass-card reveal" data-delay="0"><h4>Introduction</h4><p>This is my fourth portfolio artifact, for Workshop 4.4. In my Salesforce work I configure AI features such as Agentforce, and the question I hear most is &#x27;why did the AI say that?&#x27;. This artifact looks at how researchers and companies try to answer that question for large language models (LLMs), and at how validation and performance metrics decide whether the answer can be trusted.</p></div>
+      <div class="info-card glass-card reveal" data-delay="50"><h4>Description</h4><p>One tall infographic in five sections: what explainable AI is and why it matters; 6 challenges sorted into three families; 8 techniques sorted by how much access they need, with a matrix that links each challenge to the techniques that answer it; 12 efforts from OpenAI, Anthropic, Google DeepMind and Meta; and a validation section that includes a small experiment of my own.</p></div>
+      <div class="info-card glass-card reveal" data-delay="100"><h4>Objective</h4><p>To show a non-technical reader that an AI explanation is a claim that needs testing, to map the main ways of producing and checking explanations, and to show how the leading labs contribute.</p></div>
+      <div class="info-card glass-card reveal" data-delay="150"><h4>Process</h4><ol style="padding-left:1.25rem;line-height:1.9;color:var(--text-light);font-size:0.95rem;"><li>Read the assignment resources, then the primary papers and lab posts behind each claim (29 sources, all listed in the graphic).</li><li>Listed every challenge and technique I found, then sorted them: challenges by where the difficulty lives, techniques by the access they need.</li><li>Built a challenge-by-technique matrix to find the relationships, and checked that every challenge has a main answer and every technique answers something.</li><li>Ran a small experiment on the breast-cancer data from my report 4.1 to show how an explanation can be validated (deletion test).</li><li>Put every item in one data file with 40 automatic checks, then generated the infographic, this page and the explanatory document from it.</li><li>Reviewed the rendered image section by section for alignment, contrast and spelling, and fixed what I found.</li></ol></div>
+      <div class="info-card glass-card reveal" data-delay="200"><h4>Tools</h4><ul style="padding-left:1.25rem;line-height:1.9;color:var(--text-light);font-size:0.95rem;"><li><strong>Python and scikit-learn</strong> for the experiment (permutation importance and the deletion test).</li><li><strong>HTML, CSS and Playwright</strong> to build the infographic as live text and export a PNG and a PDF.</li><li><strong>Primary sources</strong> papers, lab research posts and regulation text, not blog summaries.</li><li><strong>An AI assistant (Claude)</strong> to help draft the build scripts and first-pass wording. I checked each claim against its source and edited the text.</li></ul></div>
+      <div class="info-card glass-card reveal" data-delay="250"><h4>Value Proposition</h4><p>It shows I can take a fast-moving, technical topic, check each claim against its source, and explain it to a mixed audience without overstating what is known. Teams adopting AI need people who can say what an explanation proves and what it does not.</p></div>
+      <div class="info-card glass-card full-width reveal" data-delay="300"><h4>Unique Value</h4><p>Artifact 1 sorted algorithms, Artifact 2 explained a neural network and Artifact 3 priced LLM training. This one is about trust: it classifies challenges and solutions, maps how they relate, and includes my own test of an explanation. Every claim carries an evidence tag.</p></div>
+      <div class="info-card glass-card full-width reveal" data-delay="350"><h4>Relevance</h4><p>Salesforce customers ask whether they can trust AI answers and who is accountable. Knowing that written reasoning can be unfaithful, that model cards document limits, and that metrics and explanation tests answer different questions helps me advise on human review, vendor questions and when an AI feature is safe to automate.</p></div>
+    </div></div></section>
+
+    <section class="comparison-section" id="content"><div class="container">
+      <div class="section-label" style="text-align:center;display:block;">The Content</div>
+      <h2>Challenges, Techniques and Who Is Doing What</h2>
+      <p class="tight-p">Text version of the graphic. Numbers in brackets point to the source list at the bottom of the page.</p>
+      <details class="textver glass-card" style="padding:1rem 1.5rem;" open><summary>Six challenges in three families</summary><div class="algo-table-wrap glass-card reveal"><table class="algo-table"><caption class="sr-only" style="position:absolute;left:-9999px">Challenges</caption><thead><tr><th>ID</th><th>Family</th><th>Challenge</th><th>What it means</th><th>Evidence and source</th></tr></thead><tbody><tr><th scope="row">C1</th><td>The model is opaque</td><td>Scale and distributed computation</td><td>Answers emerge from billions of parameters acting together. No single component explains an output.</td><td>Claude 3.5 Haiku traced with a cross-layer transcoder of about 30 million features, and the method still covered only short prompts and part of the computation. [17]</td></tr><tr><th scope="row">C2</th><td>The model is opaque</td><td>Superposition: neurons mix concepts</td><td>One neuron often responds to many unrelated ideas, so reading single neurons does not work.</td><td>GPT-4 wrote explanations for all 307,200 GPT-2 neurons: over 1,000 scored at least 0.8, but most scored poorly. [3] [6]</td></tr><tr><th scope="row">C3</th><td>Explanations can mislead</td><td>Explanations can be unfaithful</td><td>A model&#x27;s written reasoning may be a plausible story that does not match what really drove the answer.</td><td>When a hint changed Claude 3.7 Sonnet&#x27;s or DeepSeek R1&#x27;s answer, the reasoning mentioned the hint less than 20% of the time in most settings tested. [5] [27]</td></tr><tr><th scope="row">C4</th><td>Explanations can mislead</td><td>Attention is easy to misread</td><td>Heat-maps of where the model &#x27;looks&#x27; are tempting, but high attention does not prove that input caused the output.</td><td>Jain and Wallace found attention weights often disagree with other importance measures, and different weights can give the same prediction. [13]</td></tr><tr><th scope="row">C5</th><td>Data and access limit checking</td><td>Biased and noisy training data</td><td>Models copy the patterns in their data, including stereotypes, and the bias can hide behind polite answers.</td><td>Models that avoid overt racism still linked African American English speakers to lower-prestige jobs. [11]</td></tr><tr><th scope="row">C6</th><td>Data and access limit checking</td><td>Closed models and rising rules</td><td>Outsiders cannot inspect closed models, yet regulators now ask for transparency and reasons.</td><td>General-purpose AI duties in the EU AI Act apply from 2 August 2025; US lenders must give specific reasons for credit denial; NIST lists &#x27;explainable and interpretable&#x27; as a trust trait. [7] [8] [21]</td></tr></tbody></table></div></details>
+      <details class="textver glass-card" style="padding:1rem 1.5rem;"><summary>Eight techniques in three families</summary><div class="algo-table-wrap glass-card reveal"><table class="algo-table"><caption class="sr-only" style="position:absolute;left:-9999px">Techniques</caption><thead><tr><th>ID</th><th>Family (access needed)</th><th>Technique</th><th>What it does</th><th>Sources</th></tr></thead><tbody><tr><th scope="row">T1</th><td>From the outside (needs only inputs and outputs)</td><td>Chain-of-thought and asking for reasons</td><td>Prompt the model to write its steps. Cheap and readable, but must be checked, not trusted.</td><td>[27] [28]</td></tr><tr><th scope="row">T2</th><td>From the outside (needs only inputs and outputs)</td><td>LIME and SHAP</td><td>Change the input a little, watch how the output moves, and score each feature&#x27;s contribution.</td><td>[18] [24]</td></tr><tr><th scope="row">T3</th><td>From the inside (needs the model&#x27;s weights)</td><td>Gradient attribution</td><td>Use the model&#x27;s gradients to score which input pieces moved the output (integrated gradients).</td><td>[15] [25]</td></tr><tr><th scope="row">T4</th><td>From the inside (needs the model&#x27;s weights)</td><td>Attention views and probes</td><td>Show attention weights or train a small classifier on internal activations to see what is stored.</td><td>[1] [13]</td></tr><tr><th scope="row">T5</th><td>From the inside (needs the model&#x27;s weights)</td><td>Sparse autoencoders</td><td>Split internal activations into many interpretable features, such as a place or a coding error.</td><td>[4] [10] [16] [26]</td></tr><tr><th scope="row">T6</th><td>From the inside (needs the model&#x27;s weights)</td><td>Circuit tracing</td><td>Map the chain of features that leads from the prompt to the answer (attribution graphs).</td><td>[17]</td></tr><tr><th scope="row">T7</th><td>Around the model (needs documents and oversight)</td><td>Model and system cards</td><td>Standard reports of intended use, data, results and limits for each release.</td><td>[20]</td></tr><tr><th scope="row">T8</th><td>Around the model (needs documents and oversight)</td><td>Reasoning monitors and red teaming</td><td>A second model reads the reasoning for misbehavior; testers probe for harm.</td><td>[2] [9]</td></tr></tbody></table></div></details>
+      <details class="textver glass-card" style="padding:1rem 1.5rem;"><summary>Which technique answers which challenge (matrix)</summary><div class="algo-table-wrap glass-card reveal"><table class="algo-table"><caption class="sr-only" style="position:absolute;left:-9999px">Challenge by technique matrix</caption><thead><tr><th>Challenge</th><th class=c>T1</th><th class=c>T2</th><th class=c>T3</th><th class=c>T4</th><th class=c>T5</th><th class=c>T6</th><th class=c>T7</th><th class=c>T8</th></tr></thead><tbody><tr><th scope="row">C1 Scale and distributed computation</th><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span aria-label="partial help">&#9675;</span></td><td class=c><span aria-label="main answer">&#9679;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span aria-label="main answer">&#9679;</span></td><td class=c><span aria-label="main answer">&#9679;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td></tr><tr><th scope="row">C2 Superposition: neurons mix concepts</th><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span aria-label="main answer">&#9679;</span></td><td class=c><span aria-label="partial help">&#9675;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td></tr><tr><th scope="row">C3 Explanations can be unfaithful</th><td class=c><span aria-label="partial help">&#9675;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span aria-label="main answer">&#9679;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span aria-label="main answer">&#9679;</span></td></tr><tr><th scope="row">C4 Attention is easy to misread</th><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span aria-label="main answer">&#9679;</span></td><td class=c><span aria-label="partial help">&#9675;</span></td><td class=c><span aria-label="partial help">&#9675;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td></tr><tr><th scope="row">C5 Biased and noisy training data</th><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span aria-label="main answer">&#9679;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span aria-label="main answer">&#9679;</span></td><td class=c><span aria-label="partial help">&#9675;</span></td></tr><tr><th scope="row">C6 Closed models and rising rules</th><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span aria-label="partial help">&#9675;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span aria-label="partial help">&#9675;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td><td class=c><span aria-label="main answer">&#9679;</span></td><td class=c><span class="sr-only" style="position:absolute;left:-9999px">none</span></td></tr></tbody></table></div>
+        <p class="map-caption">&#9679; main answer, &#9675; partial help. Every challenge has at least one main answer; no technique answers all six.</p></details>
+      <details class="textver glass-card" style="padding:1rem 1.5rem;"><summary>What OpenAI, Anthropic, Google DeepMind and Meta are doing</summary><div class="algo-table-wrap glass-card reveal"><table class="algo-table"><caption class="sr-only" style="position:absolute;left:-9999px">Lab efforts</caption><thead><tr><th>Organisation</th><th>Year</th><th>Effort</th><th>Source</th></tr></thead><tbody><tr><th scope="row">Anthropic</th><td>2024</td><td>Sparse autoencoders found up to 34 million features in Claude 3 Sonnet, such as places, people and code errors.</td><td>[26]</td></tr><tr><th scope="row">Anthropic</th><td>2025</td><td>Attribution graphs traced Claude 3.5 Haiku step by step, including planning a rhyme before writing a line.</td><td>[17]</td></tr><tr><th scope="row">Anthropic</th><td>2025</td><td>Tested whether reasoning matches behavior in Claude 3.7 Sonnet and DeepSeek R1.</td><td>[5]</td></tr><tr><th scope="row">OpenAI</th><td>2023</td><td>Used GPT-4 to explain neurons of GPT-2. Most explanations scored poorly.</td><td>[3]</td></tr><tr><th scope="row">OpenAI</th><td>2024</td><td>Trained a 16-million-latent sparse autoencoder on GPT-4 activations.</td><td>[10]</td></tr><tr><th scope="row">OpenAI</th><td>2025</td><td>Showed a weaker model can monitor a stronger model&#x27;s reasoning, and that punishing &#x27;bad thoughts&#x27; teaches hiding.</td><td>[2]</td></tr><tr><th scope="row">Google DeepMind</th><td>2018</td><td>TCAV tests whether a human concept, such as &#x27;stripes&#x27;, drives a prediction.</td><td>[14]</td></tr><tr><th scope="row">Google DeepMind</th><td>2019</td><td>Co-created model cards, now a common format for documenting models.</td><td>[20]</td></tr><tr><th scope="row">Google DeepMind</th><td>2024</td><td>Gemma Scope: over 400 open sparse autoencoders for Gemma 2, free for researchers.</td><td>[16]</td></tr><tr><th scope="row">Meta</th><td>2020</td><td>Captum: an open-source PyTorch library for integrated gradients, saliency and more.</td><td>[15]</td></tr><tr><th scope="row">Meta</th><td>2023</td><td>Llama Guard: an open classifier that checks prompts and answers against a safety policy.</td><td>[12]</td></tr><tr><th scope="row">Meta</th><td>Ongoing</td><td>Open Llama weights let outside labs run inside-the-model methods.</td><td>n/a</td></tr></tbody></table></div>
+        <ul style="padding-left:1.25rem;line-height:1.9;color:var(--text-light);font-size:0.95rem;"><li><strong>Anthropic:</strong> Done on one model at a time and on short prompts.</li><li><strong>OpenAI:</strong> GPT-4 weights stay private, so outsiders cannot repeat the work.</li><li><strong>Google DeepMind:</strong> Open tools cover the open Gemma models, not Gemini.</li><li><strong>Meta:</strong> Mostly tools and open access; the explanations are left to the community.</li></ul></details>
+    </div></section>
+
+    <section class="comparison-section" id="validation"><div class="container">
+      <div class="section-label" style="text-align:center;display:block;">Validation and Metrics</div>
+      <h2>How an Explanation Becomes Evidence</h2>
+      <p class="tight-p">Four questions, in order. The last is where explainability meets validation, so I tested it on the breast-cancer data from my report 4.1.</p>
+      <div class="algo-table-wrap glass-card reveal"><table class="algo-table"><caption class="sr-only" style="position:absolute;left:-9999px">Validation questions</caption><thead><tr><th>#</th><th>Question</th><th>Metric or test</th><th>How</th></tr></thead><tbody><tr><th scope="row">1</th><td>Does it work?</td><td>Accuracy, precision, recall, F1, ROC-AUC</td><td>Score predictions against known answers.</td></tr><tr><th scope="row">2</th><td>Does it work on new data?</td><td>Held-out test set, cross-validation</td><td>Hold data back, or rotate it across folds.</td></tr><tr><th scope="row">3</th><td>Does it hold up under pressure?</td><td>Red teaming, bias tests, jailbreak rates</td><td>Attack it and test across groups.</td></tr><tr><th scope="row">4</th><td>Is the explanation true?</td><td>Deletion test, hint test</td><td>Remove what the explanation names and see if the output really changes.</td></tr></tbody></table></div>
+      <h3 style="text-align:center;margin:1.5rem 0 .5rem;">My experiment: delete the features an explanation names</h3>
+      <div class="algo-table-wrap glass-card reveal"><table class="algo-table"><caption class="sr-only" style="position:absolute;left:-9999px">Deletion test</caption><thead><tr><th>Model</th><th class=c>Recall (test)</th><th>Top-5 features by permutation importance</th><th class=c>Recall after deleting top-5</th><th class=c>Recall after deleting 5 random (mean of 200)</th></tr></thead><tbody><tr><th scope="row">Logistic Regression</th><td class=c>0.929</td><td>worst texture, worst concavity, worst symmetry, worst concave points, worst radius</td><td class=c>0.810 (-11.9 pts)</td><td class=c>0.927 (-0.2 pts)</td></tr><tr><th scope="row">Random Forest</th><td class=c>0.929</td><td>worst concave points, worst area, worst texture, worst concavity, mean concave points</td><td class=c>0.833 (-9.5 pts)</td><td class=c>0.899 (-3.0 pts)</td></tr></tbody></table></div>
+      <p class="map-caption" style="max-width:75ch;margin:1rem auto 0;">Both explanations pass: deleting the named features costs more recall than deleting random ones. Yet the two equally accurate models share only 3 of 5 top features (worst concave points, worst concavity, worst texture). Method: permutation importance on the 114-patient test set (42 malignant), deletion by replacing features with their training mean, scikit-learn, seed 42. Correlated features share importance, so treat the lists as indicative.</p>
+      <div class="dl-row"><a href="data/verification.txt">View the 40 data checks</a><a href="data/data.json">View the data file (JSON)</a></div>
+    </div></section>
+
+    <section class="comparison-section" id="classification"><div class="container">
+      <div class="section-label" style="text-align:center;display:block;">Classification</div>
+      <h2>How I Sorted the Content</h2>
+      <p class="tight-p">Challenges are sorted by where the difficulty lives; techniques by the access they need; relationships by a challenge-technique matrix.</p>
+      <div class="artifact-info-grid">
+        <div class="info-card glass-card reveal" data-delay="0"><h4>Sorting Rules</h4><ul class="rule-list"><li><strong>Challenges: where the difficulty lives.</strong> Family A (the model is opaque) is about the model&#x27;s insides. Family B (explanations can mislead) is about the explanation as an output. Family C (data and access) is about what surrounds the model.</li><li><strong>Techniques: how much access they need.</strong> From the outside needs only inputs and outputs. From the inside needs the weights. Around the model needs documents and oversight. Access decides who can use a technique, so it is the most useful way to sort them.</li><li><strong>Relationships: the matrix.</strong> A challenge-technique pair is marked &#x27;main&#x27; when the technique was designed to address that difficulty, and &#x27;partial&#x27; when it helps but cannot settle it.</li><li><strong>Evidence.</strong> Claims tagged R come from the cited source. Tags D come from my own experiment. Numbers I could only find in secondary summaries are written qualitatively.</li></ul></div>
+        <div class="info-card glass-card reveal" data-delay="50"><h4>Decisions and Trade-offs</h4><ul class="rule-list"><li><strong>Sort challenges by cause, not by severity.</strong> Severity is subjective and changes. Cause stays stable and points to the fix: opaque insides need inside tools, misleading explanations need tests, and access problems need documentation and rules.</li><li><strong>Sort techniques by access, not by method name.</strong> Method names (gradients, autoencoders) mean little to a non-technical reader. Access answers a practical question: what can I do with a closed model compared with an open one?</li><li><strong>Chain-of-thought appears twice.</strong> It is a technique (T1) and also the subject of challenge C3, because the same written reasoning that helps can mislead. I placed it as a technique and mark it &#x27;partial&#x27; for C3, since it is what the other methods check.</li><li><strong>Attention appears twice.</strong> Attention views are a technique (T4) and a challenge (C4). The paper that criticises them is the reason they are marked partial for C4.</li><li><strong>Validation gets its own section.</strong> The assignment treats validation and metrics as a separate pillar. I connected it to explainability with a fourth question, &#x27;Is the explanation true?&#x27;, and with a real test.</li></ul></div>
+        <div class="info-card glass-card full-width reveal" data-delay="100"><h4>Corrections I Made While Building It</h4><ul style="padding-left:1.25rem;line-height:1.9;color:var(--text-light);font-size:0.95rem;"><li>I first planned to quote exact faithfulness rates for reasoning models (such as 25% and 39%). They appeared only in a third-party summary, and the paper&#x27;s abstract says rates are often below 20%, so I wrote it as &#x27;less than 20% in most settings tested&#x27;.</li><li>Search results gave conflicting dates for the EU AI Act&#x27;s high-risk rules, which have been revised. I kept only the date I could confirm (general-purpose AI duties from 2 August 2025).</li><li>I expected my two models&#x27; top features to agree closely. They share only 3 of 5, so I changed the experiment&#x27;s message from &#x27;the explanation is right&#x27; to &#x27;it passes the test, and equally accurate models can still differ&#x27;.</li><li>A late render check showed the family letters in the challenge cards were invisible (text colour matched the background) and the 2x2 labels were misplaced. I fixed both.</li></ul></div>
+      </div>
+    </div></section>
+
+    <section class="artifact-content reveal" id="reflection"><div class="container">
+      <div class="section-label" style="text-align:center;display:block;">Reflection</div>
+      <h2>Artifact Reflection</h2>
+      <div class="info-card glass-card full-width reveal" style="margin-bottom:1.5rem;"><h4>Lessons Learned</h4><p><strong>What I learned.</strong> I started by assuming that asking a model to explain itself was a reasonable way to see its reasoning. The sources changed that. When a hint changed an answer, the models&#x27; reasoning often left it out, so a fluent explanation is not evidence. The second surprise was access: outsiders using a closed model are limited to prompts and perturbations, while the interesting inside-the-model work happens at the labs or on open models such as Gemma.</p><p><strong>The hardest part.</strong> Sorting. Several items fit two families, such as chain-of-thought and attention. I had to decide whether a classification should be neat or truthful, and I chose to show the overlap and explain it. Evidence quality was the other challenge: some headline numbers existed only in summaries, and I chose to write them qualitatively rather than risk repeating an error.</p><p><strong>What worked.</strong> Building the challenge-by-technique matrix. It exposed that no single technique answers all 6 challenges, which is the real message of the field. Running my own deletion test also helped: removing the five features each model named cost 11.9 and 9.5 points of recall, against 0.2 and 3.0 for random features. That gave me a concrete example of what &#x27;validating an explanation&#x27; means.</p><p><strong>Connections and next steps.</strong> The metrics section builds on my model comparison in report 4.1 (accuracy, precision, recall, F1, ROC-AUC) and on the red-teaming and bias examples in report 4.3. At work I will use the four-question checklist when customers ask whether to trust an AI feature. Next I want to try a model-agnostic method such as SHAP on a text classifier and compare it with the deletion test.</p></div>
+      <div class="artifact-info-grid">
+        <div class="info-card glass-card reveal" data-delay="0"><h4>Audience Customization</h4><p>Written for classmates, instructors and business colleagues who use AI tools but do not build them. The key idea (an explanation is a claim to test) appears in the opening diagram, the experiment and the takeaways. Jargon is explained where it first appears, and colour is paired with letters and words.</p></div>
+        <div class="info-card glass-card reveal" data-delay="50"><h4>Limitations</h4><ul style="padding-left:1.25rem;line-height:1.9;color:var(--text-light);font-size:0.95rem;"><li>The lab efforts are examples, not a complete survey. The field changes quickly.</li><li>The experiment uses a small tabular dataset and a simple deletion method. It illustrates how to test an explanation; it does not test an LLM. Correlated features share importance, so the lists are indicative.</li><li>Many results come from single models (Claude 3.5 Haiku, Gemma 2, GPT-2) and short prompts, so they may not generalise.</li><li>The graphic cites papers and lab posts. I did not run the labs&#x27; methods myself, apart from the experiment.</li></ul></div>
+      </div>
+    </div></section>
+
+    <section class="artifact-content references-section reveal"><div class="container">
+      <div class="info-card glass-card full-width references-card"><h4>References</h4><ul><li>[1] Alain, G., &amp; Bengio, Y. (2016). Understanding intermediate layers using linear classifier probes. arXiv:1610.01644. <a href="https://arxiv.org/abs/1610.01644">arxiv.org/abs/1610.01644</a></li><li>[2] Baker, B., et al. (2025). Monitoring reasoning models for misbehavior and the risks of promoting obfuscation. OpenAI. arXiv:2503.11926. <a href="https://arxiv.org/abs/2503.11926">arxiv.org/abs/2503.11926</a></li><li>[3] Bills, S., et al. (2023). Language models can explain neurons in language models. OpenAI. <a href="https://openai.com/index/language-models-can-explain-neurons-in-language-models">openai.com/index/language-models-can-explain-neurons-in-language-models</a></li><li>[4] Bricken, T., et al. (2023). Towards monosemanticity: Decomposing language models with dictionary learning. Anthropic. <a href="https://transformer-circuits.pub/2023/monosemantic-features">transformer-circuits.pub/2023/monosemantic-features</a></li><li>[5] Chen, Y., et al. (2025). Reasoning models don&#x27;t always say what they think. Anthropic. arXiv:2505.05410. <a href="https://arxiv.org/abs/2505.05410">arxiv.org/abs/2505.05410</a></li><li>[6] Elhage, N., et al. (2022). Toy models of superposition. Anthropic. arXiv:2209.10652. <a href="https://arxiv.org/abs/2209.10652">arxiv.org/abs/2209.10652</a></li><li>[7] Equal Credit Opportunity Act, Regulation B, 12 CFR 1002.9 (notice of adverse action with specific reasons). <a href="https://ecfr.gov/current/title-12/part-1002">ecfr.gov/current/title-12/part-1002</a></li><li>[8] European Union. (2024). Regulation (EU) 2024/1689 (Artificial Intelligence Act). General-purpose AI obligations apply from 2 August 2025. <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">eur-lex.europa.eu/eli/reg/2024/1689/oj</a></li><li>[9] Ganguli, D., et al. (2022). Red teaming language models to reduce harms. Anthropic. arXiv:2209.07858. <a href="https://arxiv.org/abs/2209.07858">arxiv.org/abs/2209.07858</a></li><li>[10] Gao, L., et al. (2024). Scaling and evaluating sparse autoencoders. OpenAI. arXiv:2406.04093. <a href="https://arxiv.org/abs/2406.04093">arxiv.org/abs/2406.04093</a></li><li>[11] Hofmann, V., et al. (2024). AI generates covertly racist decisions about people based on their dialect. Nature, 633, 147-154. <a href="https://doi.org/10.1038/s41586-024-07856-5">doi.org/10.1038/s41586-024-07856-5</a></li><li>[12] Inan, H., et al. (2023). Llama Guard: LLM-based input-output safeguard for human-AI conversations. Meta. arXiv:2312.06674. <a href="https://arxiv.org/abs/2312.06674">arxiv.org/abs/2312.06674</a></li><li>[13] Jain, S., &amp; Wallace, B. C. (2019). Attention is not explanation. NAACL. arXiv:1902.10186. <a href="https://arxiv.org/abs/1902.10186">arxiv.org/abs/1902.10186</a></li><li>[14] Kim, B., et al. (2018). Interpretability beyond feature attribution: Quantitative testing with concept activation vectors (TCAV). ICML. arXiv:1711.11279. <a href="https://arxiv.org/abs/1711.11279">arxiv.org/abs/1711.11279</a></li><li>[15] Kokhlikyan, N., et al. (2020). Captum: A unified and generic model interpretability library for PyTorch. Meta AI. arXiv:2009.07896. <a href="https://arxiv.org/abs/2009.07896">arxiv.org/abs/2009.07896</a></li><li>[16] Lieberum, T., et al. (2024). Gemma Scope: Open sparse autoencoders everywhere all at once on Gemma 2. Google DeepMind. arXiv:2408.05147. <a href="https://arxiv.org/abs/2408.05147">arxiv.org/abs/2408.05147</a></li><li>[17] Lindsey, J., et al. (2025). On the biology of a large language model. Anthropic. <a href="https://transformer-circuits.pub/2025/attribution-graphs/biology.html">transformer-circuits.pub/2025/attribution-graphs/biology.html</a></li><li>[18] Lundberg, S., &amp; Lee, S.-I. (2017). A unified approach to interpreting model predictions (SHAP). NeurIPS. arXiv:1705.07874. <a href="https://arxiv.org/abs/1705.07874">arxiv.org/abs/1705.07874</a></li><li>[19] Mata v. Avianca, Inc., 678 F. Supp. 3d 443 (S.D.N.Y. 2023) (sanctions for filing fabricated ChatGPT citations). <a href="https://law.justia.com/cases/federal/district-courts/new-york/nysdce/1:2022cv01461/575368/54">law.justia.com/cases/federal/district-courts/new-york/nysdce/1:2022cv01461/575368/54</a></li><li>[20] Mitchell, M., et al. (2019). Model cards for model reporting. FAT* &#x27;19. arXiv:1810.03993. <a href="https://arxiv.org/abs/1810.03993">arxiv.org/abs/1810.03993</a></li><li>[21] NIST. (2023). Artificial Intelligence Risk Management Framework (AI RMF 1.0). NIST AI 100-1. <a href="https://nist.gov/itl/ai-risk-management-framework">nist.gov/itl/ai-risk-management-framework</a></li><li>[22] OpenAI. (2023). GPT-4 technical report. arXiv:2303.08774. <a href="https://arxiv.org/abs/2303.08774">arxiv.org/abs/2303.08774</a></li><li>[23] Pedregosa, F., et al. (2011). Scikit-learn: Machine learning in Python. JMLR, 12, 2825-2830. <a href="https://jmlr.org/papers/v12/pedregosa11a.html">jmlr.org/papers/v12/pedregosa11a.html</a></li><li>[24] Ribeiro, M. T., Singh, S., &amp; Guestrin, C. (2016). &quot;Why should I trust you?&quot;: Explaining the predictions of any classifier (LIME). KDD. arXiv:1602.04938. <a href="https://arxiv.org/abs/1602.04938">arxiv.org/abs/1602.04938</a></li><li>[25] Sundararajan, M., Taly, A., &amp; Yan, Q. (2017). Axiomatic attribution for deep networks (integrated gradients). ICML. arXiv:1703.01365. <a href="https://arxiv.org/abs/1703.01365">arxiv.org/abs/1703.01365</a></li><li>[26] Templeton, A., et al. (2024). Scaling monosemanticity: Extracting interpretable features from Claude 3 Sonnet. Anthropic. <a href="https://transformer-circuits.pub/2024/scaling-monosemanticity">transformer-circuits.pub/2024/scaling-monosemanticity</a></li><li>[27] Turpin, M., et al. (2023). Language models don&#x27;t always say what they think: Unfaithful explanations in chain-of-thought prompting. NeurIPS. arXiv:2305.04388. <a href="https://arxiv.org/abs/2305.04388">arxiv.org/abs/2305.04388</a></li><li>[28] Wei, J., et al. (2022). Chain-of-thought prompting elicits reasoning in large language models. NeurIPS. arXiv:2201.11903. <a href="https://arxiv.org/abs/2201.11903">arxiv.org/abs/2201.11903</a></li><li>[29] Wolberg, W. H., Street, W. N., &amp; Mangasarian, O. L. (1995). Breast Cancer Wisconsin (Diagnostic) data set. UCI Machine Learning Repository. <a href="https://archive.ics.uci.edu/dataset/17">archive.ics.uci.edu/dataset/17</a></li></ul></div>
+    </div></section>
+  </main>
+
+  <footer class="footer"><div class="container">
+    <p>Deepthi Pinninti &bull; AIML Portfolio &copy; 2026</p>
+    <p class="footer-sub"><a href="../../index.html">&#8592; Back to Portfolio</a> | Built with GitHub Pages | Indiana Wesleyan University</p>
+  </div></footer>
+
+  <script>
+    (function initParticles() {
+      var bg = document.querySelector('.particle-bg'); if (!bg) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var colors = ['rgba(37, 99, 235, 0.25)','rgba(124, 58, 237, 0.2)','rgba(37, 99, 235, 0.15)','rgba(124, 58, 237, 0.12)','rgba(59, 130, 246, 0.18)'];
+      for (var i = 0; i < 30; i++) {
+        var p = document.createElement('div'); p.classList.add('particle'); var s = Math.random() * 4 + 2;
+        p.style.width = s + 'px'; p.style.height = s + 'px'; p.style.left = Math.random() * 100 + '%';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.animationDuration = (Math.random() * 15 + 10) + 's'; p.style.animationDelay = (Math.random() * 10) + 's'; bg.appendChild(p);
+      }
+    })();
+  </script>
+  <script src="../../js/main.js" defer></script>
+</body>
+</html>

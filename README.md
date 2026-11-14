@@ -8,4 +8,6 @@ Portfolio for the AIML course at Indiana Wesleyan University.
 
 - Artifact 3 (Workshop 3.4): How an LLM Is Trained, and What It Costs, an infographic of the nine training stages and the data, compute, energy, time and dollar costs of GPT-3, Llama, DeepSeek-V3 and other models, with an explanatory document.
 
+- Artifact 4 (Workshop 4.4): Opening the Black Box, an infographic that sorts six challenges and eight techniques of explainable AI for LLMs, shows what the leading labs are doing, and tests how validation turns an explanation into evidence, with an explanatory document.
+
 Built with plain HTML and CSS and hosted on GitHub Pages.

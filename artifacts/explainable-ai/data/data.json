@@ -1,0 +1,108 @@
+{
+ "derived": {
+  "n_orgs": 4,
+  "n_chal": 6,
+  "n_tech": 8,
+  "n_items": 12,
+  "n_src": 29,
+  "drop_lr": 11.904761904761907,
+  "drop_rf": 9.523809523809524,
+  "drop_lr_rand": 0.154761904761902,
+  "drop_rf_rand": 2.964285714285697,
+  "overlap": 3,
+  "main_cover": {
+   "C1": 3,
+   "C2": 1,
+   "C3": 2,
+   "C4": 1,
+   "C5": 2,
+   "C6": 1
+  }
+ },
+ "experiment": {
+  "features": [
+   "mean radius",
+   "mean texture",
+   "mean perimeter",
+   "mean area",
+   "mean smoothness",
+   "mean compactness",
+   "mean concavity",
+   "mean concave points",
+   "mean symmetry",
+   "mean fractal dimension",
+   "radius error",
+   "texture error",
+   "perimeter error",
+   "area error",
+   "smoothness error",
+   "compactness error",
+   "concavity error",
+   "concave points error",
+   "symmetry error",
+   "fractal dimension error",
+   "worst radius",
+   "worst texture",
+   "worst perimeter",
+   "worst area",
+   "worst smoothness",
+   "worst compactness",
+   "worst concavity",
+   "worst concave points",
+   "worst symmetry",
+   "worst fractal dimension"
+  ],
+  "models": {
+   "Logistic Regression": {
+    "base_recall": 0.9285714285714286,
+    "top": [
+     "worst texture",
+     "worst concavity",
+     "worst symmetry",
+     "worst concave points",
+     "worst radius"
+    ],
+    "top_imp": [
+     0.05396825396825402,
+     0.04206349206349212,
+     0.02777777777777781,
+     0.026190476190476222,
+     0.003968253968253995
+    ],
+    "recall_top_removed": 0.8095238095238095,
+    "recall_random_removed_mean": 0.9270238095238096,
+    "recall_random_removed_min": 0.8095238095238095
+   },
+   "Random Forest": {
+    "base_recall": 0.9285714285714286,
+    "top": [
+     "worst concave points",
+     "worst area",
+     "worst texture",
+     "worst concavity",
+     "mean concave points"
+    ],
+    "top_imp": [
+     0.04761904761904767,
+     0.04047619047619051,
+     0.03650793650793655,
+     0.02619047619047622,
+     0.023809523809523836
+    ],
+    "recall_top_removed": 0.8333333333333334,
+    "recall_random_removed_mean": 0.8989285714285716,
+    "recall_random_removed_min": 0.8095238095238095
+   }
+  },
+  "rank_corr": 0.6132713202327557,
+  "overlap_top5": [
+   "worst concave points",
+   "worst concavity",
+   "worst texture"
+  ],
+  "k": 5,
+  "n_random": 200,
+  "n_test": 114,
+  "n_test_pos": 42
+ }
+}
